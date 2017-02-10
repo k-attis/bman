@@ -111,9 +111,8 @@ namespace Kliens
                                     offset_y + cell_size * i,
                                     cell_size,
                                     cell_size);
-
-                                uint utf32 = uint.Parse("1F463", System.Globalization.NumberStyles.HexNumber);
-                                string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(utf32));
+                                
+                                string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1f463));
 
                                 Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
 
