@@ -112,14 +112,17 @@ namespace Kliens
                                     cell_size,
                                     cell_size);
 
-                                Font f = new Font("Comic Sans Ms", cell_size * 0.6f, FontStyle.Bold);
+                                uint utf32 = uint.Parse("1F463", System.Globalization.NumberStyles.HexNumber);
+                                string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(utf32));
 
-                                SizeF s = bufferg.MeasureString("L", f);
+                                Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
+
+                                SizeF s = bufferg.MeasureString(ss, f);
 
                                 int sox = (cell_size - (int)s.Width) / 2;
                                 int soy = (cell_size - (int)s.Height) / 2;
 
-                                bufferg.DrawString("L",
+                                bufferg.DrawString(ss,
                                     f,
                                     Brushes.Black,
                                     offset_x + cell_size * j + sox,
