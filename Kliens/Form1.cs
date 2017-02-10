@@ -187,7 +187,7 @@ namespace Kliens
             foreach (Jatekos j in JatekosLista.Values.ToList())
             {
                 string ss = Encoding.UTF32.GetString(
-                                                   BitConverter.GetBytes(0x1F600)
+                                                   BitConverter.GetBytes(0x1F603)
                                                    );
 
                 Font f = new Font("Segoe UI Symbol",
