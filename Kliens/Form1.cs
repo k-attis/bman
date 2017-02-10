@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -35,32 +36,74 @@ namespace Kliens
         Bitmap buffer;
         Graphics bufferg;
 
+        int palya_szelesseg;
+        int palya_magassag;
+
+        CellaTipus[,] Palya;
+
+        void palya_init(int szelesseg, int magassag)
+        {
+            palya_szelesseg = szelesseg;
+            palya_magassag = magassag;
+
+            Palya = new CellaTipus[szelesseg, magassag];
+
+            Palya[0, 0] = CellaTipus.Fal;
+            Palya[5, 6] = CellaTipus.Fal;
+            Palya[1, 1] = CellaTipus.Robbanthato_Fal;
+            Palya[2, 2] = CellaTipus.Lab_Kartya;
+        }
+
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
             if (buffer == null)
                 return;
 
-            int cell_width = buffer.Width / 35;
-            int cell_height = buffer.Height / 35;
+            int cell_width = (buffer.Width - 150) / palya_szelesseg;
+            int cell_height = (buffer.Height - 150) / palya_magassag;
             int cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
 
-            int offset_x = (buffer.Width - cell_size * 35) / 2;
-            int offset_y = (buffer.Height - cell_size * 35) / 2;
+            int offset_x = (buffer.Width - cell_size * palya_szelesseg) / 2;
+            int offset_y = (buffer.Height - cell_size * palya_magassag) / 2;
 
             // vízszintes
-            for (int y = 0; y < (35+1); y++)
-                bufferg.DrawLine(Pens.Red, 
-                    offset_x, 
-                    offset_y + cell_size * y, 
-                    offset_x + cell_size * 35, 
+            for (int y = 0; y < (palya_magassag + 1); y++)
+                bufferg.DrawLine(Pens.Red,
+                    offset_x,
+                    offset_y + cell_size * y,
+                    offset_x + cell_size * palya_szelesseg,
                     offset_y + cell_size * y);
 
-            for (int x = 0; x < (35+1); x++)
+            for (int x = 0; x < (palya_szelesseg + 1); x++)
                 bufferg.DrawLine(Pens.Red,
                     offset_x + cell_size * x,
                     offset_y,
                     offset_x + cell_size * x,
-                    offset_y + cell_size * 35);
+                    offset_y + cell_size * palya_magassag);
+
+            for (int i = 0; i < palya_magassag; i++)
+                for (int j = 0; j < palya_szelesseg; j++)
+                    switch (Palya[j, i])
+                    {
+                        case CellaTipus.Fal:
+                            {
+                                bufferg.FillRectangle(Brushes.Gray,
+                                    offset_x + cell_size * j,
+                                    offset_y + cell_size * i,
+                                    cell_size,
+                                    cell_size);
+                                break;
+                            }
+                        case CellaTipus.Robbanthato_Fal:
+                            {
+                                bufferg.FillRectangle(new HatchBrush(HatchStyle.DiagonalBrick, Color.Gray, Color.Red),
+                                    offset_x + cell_size * j,
+                                    offset_y + cell_size * i,
+                                    cell_size,
+                                    cell_size);
+                                break;
+                            }
+                    }
 
             e.Graphics.DrawImage(buffer, 0, 0);
         }
@@ -80,8 +123,10 @@ namespace Kliens
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            palya_init(10, 20);
             Thread t = new Thread(new ThreadStart(fogadoszal));
             //t.Start();
+            panel1.Refresh();
         }
 
         private void Log(String Message)
