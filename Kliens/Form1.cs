@@ -41,7 +41,7 @@ namespace Kliens
         uint cell_size;
         uint offset_x;
         uint offset_y;
-        
+
         CellaTipus[,] Palya;
 
         Dictionary<uint, Jatekos> JatekosLista = new Dictionary<uint, Jatekos>();
@@ -68,7 +68,7 @@ namespace Kliens
                 y = 5
             };
         }
-        
+
         uint CellaX2PixelX(uint CellaX)
         {
             return offset_x + CellaX * cell_size;
@@ -226,7 +226,7 @@ namespace Kliens
         {
             palya_init(10, 10);
             Thread t = new Thread(new ThreadStart(fogadoszal));
-            //t.Start();
+            t.Start();
             panel1.Refresh();
         }
 
@@ -244,9 +244,9 @@ namespace Kliens
         private void fogadoszal()
         {
             tcpc = new TcpClient();
-            //tcpc.Connect("10.0.1.166", 60000);
+            tcpc.Connect("10.0.1.166", 60000);
             //tcpc.Connect("10.7.51.141", 60000);
-            tcpc.Connect("localhost", 60000);
+            //tcpc.Connect("localhost", 60000);
 
             bw = new BinaryWriter(tcpc.GetStream());
 
@@ -292,21 +292,26 @@ namespace Kliens
 
                                     JatekosLista[id] = j;
                                 }
-
-
-
-
-
                                 break;
                             case Server_Uzi_Tipusok.Palyakep:
 
-                                uint palya_szelesseg = br.ReadUInt32();
-                                uint palya_magassag = br.ReadUInt32();
+                                uint tmp_palya_szelesseg = br.ReadUInt32();
+                                uint tmp_palya_magassag = br.ReadUInt32();
+
+                                if (tmp_palya_magassag != palya_magassag
+                                    ||
+                                    tmp_palya_szelesseg != palya_szelesseg)
+                                {
+                                    Palya = new CellaTipus[tmp_palya_szelesseg, tmp_palya_magassag];
+                                    palya_szelesseg = tmp_palya_szelesseg;
+                                    palya_magassag = tmp_palya_magassag;
+                                }
 
                                 byte[] t = br.ReadBytes((int)(palya_magassag * palya_szelesseg));
 
-
-
+                                for (int i = 0, y = 0; y < palya_magassag; y++)
+                                    for (int x = 0; x < palya_szelesseg; x++)
+                                        Palya[x, y] = (CellaTipus)t[i++];
 
                                 break;
                             case Server_Uzi_Tipusok.Meghaltal:
@@ -328,7 +333,50 @@ namespace Kliens
                 bw.Write((byte)Jatekos_Uzi_Tipusok.Chat);
                 bw.Write(textBox1.Text);
                 bw.Flush();
+                textBox1.Text = "";
             }
+        }
+
+        private void Form1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.A:
+                    {
+                        bw.Write((byte)Jatekos_Uzi_Tipusok.Lep_Balra);
+                        bw.Flush();
+                        break;
+                    }
+                case Keys.S:
+                    {
+                        bw.Write((byte)Jatekos_Uzi_Tipusok.Lep_Le);
+                        bw.Flush();
+                        break;
+                    }
+                case Keys.D:
+                    {
+                        bw.Write((byte)Jatekos_Uzi_Tipusok.Lep_Jobbra);
+                        bw.Flush();
+                        break;
+                    }
+                case Keys.W:
+                    {
+                        bw.Write((byte)Jatekos_Uzi_Tipusok.Lep_Fel);
+                        bw.Flush();
+                        break;
+                    }
+                case Keys.Space:
+                    {
+                        bw.Write((byte)Jatekos_Uzi_Tipusok.Bombat_rak);
+                        bw.Flush();
+                        break;
+                    }
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            panel1.Refresh();
         }
     }
 }

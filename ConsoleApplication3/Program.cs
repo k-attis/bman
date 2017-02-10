@@ -378,7 +378,7 @@ namespace ConsoleApplication3
             {
                 bomba_check();
                 lang_check();
-                //palya_kirajzol();
+                palya_kirajzol();
                 System.Threading.Thread.Sleep(50);
             }
         }
