@@ -40,18 +40,27 @@ namespace Kliens
             if (buffer == null)
                 return;
 
-            bufferg.DrawLine(Pens.Red, 0, 0, buffer.Width, buffer.Height);
+            int cell_width = buffer.Width / 35;
+            int cell_height = buffer.Height / 35;
+            int cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
 
-            // 35 oszlop, 35 sor
+            int offset_x = (buffer.Width - cell_size * 35) / 2;
+            int offset_y = (buffer.Height - cell_size * 35) / 2;
 
-            int w = buffer.Width;
-            int h = buffer.Height;
+            // vízszintes
+            for (int y = 0; y < (35+1); y++)
+                bufferg.DrawLine(Pens.Red, 
+                    offset_x, 
+                    offset_y + cell_size * y, 
+                    offset_x + cell_size * 35, 
+                    offset_y + cell_size * y);
 
-            for (int y = 0; y < 35; y++)
-                bufferg.DrawLine(Pens.Red, 0, (h * (y + 1)) / 35, w, (h * (y + 1)) / 35);
-
-            for (int x = 0; x < 35; x++)
-                bufferg.DrawLine(Pens.Red, (w * (x + 1)) / 35, 0, (w * (x + 1)) / 35, h);
+            for (int x = 0; x < (35+1); x++)
+                bufferg.DrawLine(Pens.Red,
+                    offset_x + cell_size * x,
+                    offset_y,
+                    offset_x + cell_size * x,
+                    offset_y + cell_size * 35);
 
             e.Graphics.DrawImage(buffer, 0, 0);
         }
@@ -72,7 +81,7 @@ namespace Kliens
         private void Form1_Load(object sender, EventArgs e)
         {
             Thread t = new Thread(new ThreadStart(fogadoszal));
-            t.Start();
+            //t.Start();
         }
 
         private void Log(String Message)
@@ -135,6 +144,9 @@ namespace Kliens
                                 uint palya_magassag = br.ReadUInt32();
 
                                 byte[] t = br.ReadBytes((int)(palya_magassag * palya_szelesseg));
+
+
+
 
                                 break;
                             case Server_Uzi_Tipusok.Meghaltal:
