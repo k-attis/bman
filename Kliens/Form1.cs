@@ -36,12 +36,17 @@ namespace Kliens
         Bitmap buffer;
         Graphics bufferg;
 
-        int palya_szelesseg;
-        int palya_magassag;
-
+        uint palya_szelesseg;
+        uint palya_magassag;
+        uint cell_size;
+        uint offset_x;
+        uint offset_y;
+        
         CellaTipus[,] Palya;
 
-        void palya_init(int szelesseg, int magassag)
+        Dictionary<uint, Jatekos> JatekosLista = new Dictionary<uint, Jatekos>();
+
+        void palya_init(uint szelesseg, uint magassag)
         {
             palya_szelesseg = szelesseg;
             palya_magassag = magassag;
@@ -53,6 +58,25 @@ namespace Kliens
             Palya[1, 1] = CellaTipus.Robbanthato_Fal;
             Palya[2, 2] = CellaTipus.Lab_Kartya;
             Palya[7, 3] = CellaTipus.Bomba;
+
+            JatekosLista[1] = new Jatekos()
+            {
+                ID = 1,
+                Nev = "Test jatekos",
+                Szin = Color.FromArgb(0xFF, 0xFF, 0x00),
+                x = 2,
+                y = 5
+            };
+        }
+        
+        uint CellaX2PixelX(uint CellaX)
+        {
+            return offset_x + CellaX * cell_size;
+        }
+
+        uint CellaY2PixelY(uint CellaY)
+        {
+            return offset_y + CellaY * cell_size;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -60,37 +84,37 @@ namespace Kliens
             if (buffer == null)
                 return;
 
-            int cell_width = (buffer.Width - 150) / palya_szelesseg;
-            int cell_height = (buffer.Height - 150) / palya_magassag;
-            int cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
+            uint cell_width = ((uint)buffer.Width - 150) / palya_szelesseg;
+            uint cell_height = ((uint)buffer.Height - 150) / palya_magassag;
+            cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
 
-            int offset_x = (buffer.Width - cell_size * palya_szelesseg) / 2;
-            int offset_y = (buffer.Height - cell_size * palya_magassag) / 2;
+            offset_x = ((uint)buffer.Width - cell_size * palya_szelesseg) / 2;
+            offset_y = ((uint)buffer.Height - cell_size * palya_magassag) / 2;
 
             // vízszintes
-            for (int y = 0; y < (palya_magassag + 1); y++)
+            for (uint y = 0; y < (palya_magassag + 1); y++)
                 bufferg.DrawLine(Pens.Red,
                     offset_x,
-                    offset_y + cell_size * y,
-                    offset_x + cell_size * palya_szelesseg,
-                    offset_y + cell_size * y);
+                    CellaY2PixelY(y),
+                    CellaX2PixelX(palya_szelesseg),
+                    CellaY2PixelY(y));
 
-            for (int x = 0; x < (palya_szelesseg + 1); x++)
+            for (uint x = 0; x < (palya_szelesseg + 1); x++)
                 bufferg.DrawLine(Pens.Red,
-                    offset_x + cell_size * x,
+                    CellaX2PixelX(x),
                     offset_y,
-                    offset_x + cell_size * x,
-                    offset_y + cell_size * palya_magassag);
+                    CellaX2PixelX(x),
+                    CellaY2PixelY(palya_magassag));
 
-            for (int i = 0; i < palya_magassag; i++)
-                for (int j = 0; j < palya_szelesseg; j++)
+            for (uint i = 0; i < palya_magassag; i++)
+                for (uint j = 0; j < palya_szelesseg; j++)
                     switch (Palya[j, i])
                     {
                         case CellaTipus.Fal:
                             {
                                 bufferg.FillRectangle(Brushes.Gray,
-                                    offset_x + cell_size * j,
-                                    offset_y + cell_size * i,
+                                    CellaX2PixelX(j),
+                                    CellaY2PixelY(i),
                                     cell_size,
                                     cell_size);
                                 break;
@@ -98,8 +122,8 @@ namespace Kliens
                         case CellaTipus.Robbanthato_Fal:
                             {
                                 bufferg.FillRectangle(new HatchBrush(HatchStyle.DiagonalBrick, Color.Gray, Color.Red),
-                                    offset_x + cell_size * j,
-                                    offset_y + cell_size * i,
+                                    CellaX2PixelX(j),
+                                    CellaY2PixelY(i),
                                     cell_size,
                                     cell_size);
                                 break;
@@ -107,54 +131,80 @@ namespace Kliens
                         case CellaTipus.Lab_Kartya:
                             {
                                 bufferg.FillRectangle(Brushes.Cyan,
-                                    offset_x + cell_size * j,
-                                    offset_y + cell_size * i,
+                                    CellaX2PixelX(j),
+                                    CellaY2PixelY(i),
                                     cell_size,
                                     cell_size);
-                                
-                                string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1f463));
 
-                                Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
+                                string ss = Encoding.UTF32.GetString(
+                                    BitConverter.GetBytes(0x1f463)
+                                    );
+
+                                Font f = new Font("Segoe UI Symbol",
+                                    cell_size * 0.6f,
+                                    FontStyle.Bold);
 
                                 SizeF s = bufferg.MeasureString(ss, f);
 
-                                int sox = (cell_size - (int)s.Width) / 2;
-                                int soy = (cell_size - (int)s.Height) / 2;
+                                int sox = ((int)cell_size - (int)s.Width) / 2;
+                                int soy = ((int)cell_size - (int)s.Height) / 2;
 
                                 bufferg.DrawString(ss,
                                     f,
                                     Brushes.Black,
-                                    offset_x + cell_size * j + sox,
-                                    offset_y + cell_size * i + soy);
+                                    CellaX2PixelX(j) + sox,
+                                    CellaY2PixelY(i) + soy);
 
                                 break;
                             }
                         case CellaTipus.Bomba:
                             {
-                                bufferg.FillRectangle(Brushes.Cyan,
-                                    offset_x + cell_size * j,
-                                    offset_y + cell_size * i,
-                                    cell_size,
-                                    cell_size);
+                                /* bufferg.FillRectangle(Brushes.Cyan,
+                                     CellaX2PixelX(j,
+                                     CellaY2PixelY(i,
+                                     cell_size,
+                                     cell_size);*/
 
                                 Font f = new Font("Wingdings", cell_size * 0.6f, FontStyle.Bold);
 
                                 SizeF s = bufferg.MeasureString("M", f);
 
-                                int sox = (cell_size - (int)s.Width) / 2;
-                                int soy = (cell_size - (int)s.Height) / 2;
+                                int sox = ((int)cell_size - (int)s.Width) / 2;
+                                int soy = ((int)cell_size - (int)s.Height) / 2;
 
                                 bufferg.DrawString("M",
                                     f,
-                                    Brushes.Black,
-                                    offset_x + cell_size * j + sox,
-                                    offset_y + cell_size * i + soy);
+                                    new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xFF)),
+                                    CellaX2PixelX(j) + sox,
+                                    CellaY2PixelY(i) + soy);
 
                                 break;
                             }
 
 
                     }
+
+            foreach (Jatekos j in JatekosLista.Values.ToList())
+            {
+                string ss = Encoding.UTF32.GetString(
+                                                   BitConverter.GetBytes(0x1F600)
+                                                   );
+
+                Font f = new Font("Segoe UI Symbol",
+                    cell_size * 0.6f,
+                    FontStyle.Bold);
+
+                SizeF s = bufferg.MeasureString(ss, f);
+
+                int sox = ((int)cell_size - (int)s.Width) / 2;
+                int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                bufferg.DrawString(ss,
+                    f,
+                    new SolidBrush(j.Szin),
+                    CellaX2PixelX(j.x) + sox,
+                    CellaY2PixelY(j.y) + soy);
+            }
 
             e.Graphics.DrawImage(buffer, 0, 0);
         }
@@ -174,7 +224,7 @@ namespace Kliens
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            palya_init(10, 20);
+            palya_init(10, 10);
             Thread t = new Thread(new ThreadStart(fogadoszal));
             //t.Start();
             panel1.Refresh();
@@ -225,13 +275,27 @@ namespace Kliens
                                     if (id == 0)
                                         break;
 
-                                    br.ReadString(); // Nev
-                                    br.ReadByte(); // R
-                                    br.ReadByte(); // G
-                                    br.ReadByte();  // B
-                                    br.ReadUInt32(); // x
-                                    br.ReadUInt32(); // y
+                                    Jatekos j;
+
+                                    if (!JatekosLista.TryGetValue(id, out j))
+                                        j = new Jatekos();
+
+                                    j.Nev = br.ReadString(); // Nev
+
+                                    byte r = br.ReadByte(); // R
+                                    byte g = br.ReadByte(); // G
+                                    byte b = br.ReadByte();  // B
+
+                                    j.Szin = Color.FromArgb(r, g, b);
+                                    j.x = br.ReadUInt32(); // x
+                                    j.y = br.ReadUInt32(); // y
+
+                                    JatekosLista[id] = j;
                                 }
+
+
+
+
 
                                 break;
                             case Server_Uzi_Tipusok.Palyakep:
