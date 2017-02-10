@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JatekServer", "ConsoleApplication3\JatekServer.csproj", "{CB5F72E5-4643-4141-92C3-DF5F0F3554B9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C850BD1D-4C60-43F1-8A49-C94E7A1FF442} = {C850BD1D-4C60-43F1-8A49-C94E7A1FF442}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatTest", "ChatTest\ChatTest.csproj", "{60A25A20-5095-4651-BB30-4A1C56451290}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C850BD1D-4C60-43F1-8A49-C94E7A1FF442} = {C850BD1D-4C60-43F1-8A49-C94E7A1FF442}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KozosKod", "KozosKod\KozosKod.csproj", "{C850BD1D-4C60-43F1-8A49-C94E7A1FF442}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kliens", "Kliens\Kliens.csproj", "{77B168CA-4C70-4E11-80BC-380EDB12E7C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB5F72E5-4643-4141-92C3-DF5F0F3554B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB5F72E5-4643-4141-92C3-DF5F0F3554B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB5F72E5-4643-4141-92C3-DF5F0F3554B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB5F72E5-4643-4141-92C3-DF5F0F3554B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60A25A20-5095-4651-BB30-4A1C56451290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A25A20-5095-4651-BB30-4A1C56451290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A25A20-5095-4651-BB30-4A1C56451290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60A25A20-5095-4651-BB30-4A1C56451290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C850BD1D-4C60-43F1-8A49-C94E7A1FF442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C850BD1D-4C60-43F1-8A49-C94E7A1FF442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C850BD1D-4C60-43F1-8A49-C94E7A1FF442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C850BD1D-4C60-43F1-8A49-C94E7A1FF442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77B168CA-4C70-4E11-80BC-380EDB12E7C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B168CA-4C70-4E11-80BC-380EDB12E7C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77B168CA-4C70-4E11-80BC-380EDB12E7C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77B168CA-4C70-4E11-80BC-380EDB12E7C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
