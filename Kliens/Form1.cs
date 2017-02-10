@@ -90,7 +90,7 @@ namespace Kliens
 
             offset_x = ((uint)buffer.Width - cell_size * palya_szelesseg) / 2;
             offset_y = ((uint)buffer.Height - cell_size * palya_magassag) / 2;
-
+            /*
             // vízszintes
             for (uint y = 0; y < (palya_magassag + 1); y++)
                 bufferg.DrawLine(Pens.Red,
@@ -105,7 +105,9 @@ namespace Kliens
                     offset_y,
                     CellaX2PixelX(x),
                     CellaY2PixelY(palya_magassag));
-
+                    */
+            bufferg.Clear(Color.Green);
+                               
             for (uint i = 0; i < palya_magassag; i++)
                 for (uint j = 0; j < palya_szelesseg; j++)
                     switch (Palya[j, i])
@@ -339,6 +341,26 @@ namespace Kliens
 
         private void Form1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            panel1.Refresh();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+           
+        }
+
+        private void panel1_Click(object sender, EventArgs e)
+        {
+            panel1.Focus();
+        }
+
+        private void panel1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
             switch (e.KeyCode)
             {
                 case Keys.A:
@@ -372,11 +394,6 @@ namespace Kliens
                         break;
                     }
             }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            panel1.Refresh();
         }
     }
 }
