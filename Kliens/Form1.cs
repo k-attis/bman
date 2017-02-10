@@ -52,6 +52,7 @@ namespace Kliens
             Palya[5, 6] = CellaTipus.Fal;
             Palya[1, 1] = CellaTipus.Robbanthato_Fal;
             Palya[2, 2] = CellaTipus.Lab_Kartya;
+            Palya[7, 3] = CellaTipus.Bomba;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -103,6 +104,54 @@ namespace Kliens
                                     cell_size);
                                 break;
                             }
+                        case CellaTipus.Lab_Kartya:
+                            {
+                                bufferg.FillRectangle(Brushes.Cyan,
+                                    offset_x + cell_size * j,
+                                    offset_y + cell_size * i,
+                                    cell_size,
+                                    cell_size);
+
+                                Font f = new Font("Comic Sans Ms", cell_size * 0.6f, FontStyle.Bold);
+
+                                SizeF s = bufferg.MeasureString("L", f);
+
+                                int sox = (cell_size - (int)s.Width) / 2;
+                                int soy = (cell_size - (int)s.Height) / 2;
+
+                                bufferg.DrawString("L",
+                                    f,
+                                    Brushes.Black,
+                                    offset_x + cell_size * j + sox,
+                                    offset_y + cell_size * i + soy);
+
+                                break;
+                            }
+                        case CellaTipus.Bomba:
+                            {
+                                bufferg.FillRectangle(Brushes.Cyan,
+                                    offset_x + cell_size * j,
+                                    offset_y + cell_size * i,
+                                    cell_size,
+                                    cell_size);
+
+                                Font f = new Font("Wingdings", cell_size * 0.6f, FontStyle.Bold);
+
+                                SizeF s = bufferg.MeasureString("M", f);
+
+                                int sox = (cell_size - (int)s.Width) / 2;
+                                int soy = (cell_size - (int)s.Height) / 2;
+
+                                bufferg.DrawString("M",
+                                    f,
+                                    Brushes.Black,
+                                    offset_x + cell_size * j + sox,
+                                    offset_y + cell_size * i + soy);
+
+                                break;
+                            }
+
+
                     }
 
             e.Graphics.DrawImage(buffer, 0, 0);
