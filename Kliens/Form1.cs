@@ -17,6 +17,7 @@ namespace Kliens
     {
         public Form1()
         {
+
             InitializeComponent();
 
         }
