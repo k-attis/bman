@@ -20,6 +20,7 @@ namespace Kliens
         {
 
             InitializeComponent();
+            
 
         }
 
@@ -182,8 +183,29 @@ namespace Kliens
 
                                 break;
                             }
+                        case CellaTipus.Lang:
+                            {
+                                string ss = Encoding.UTF32.GetString(
+                                  BitConverter.GetBytes(0x1F525)
+                                  );
 
+                                Font f = new Font("Segoe UI Symbol",
+                                    cell_size * 0.6f,
+                                    FontStyle.Bold);
 
+                                SizeF s = bufferg.MeasureString(ss, f);
+
+                                int sox = ((int)cell_size - (int)s.Width) / 2;
+                                int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                                bufferg.DrawString(ss,
+                                    f,
+                                    Brushes.Red,
+                                    CellaX2PixelX(j) + sox,
+                                    CellaY2PixelY(i) + soy);
+
+                                break;
+                            }
                     }
 
             foreach (Jatekos j in JatekosLista.Values.ToList())
@@ -228,7 +250,7 @@ namespace Kliens
         {
             palya_init(10, 10);
             Thread t = new Thread(new ThreadStart(fogadoszal));
-            t.Start();
+            //t.Start();
             panel1.Refresh();
         }
 
