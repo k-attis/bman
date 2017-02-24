@@ -338,8 +338,39 @@ namespace ConsoleApplication3
             }
         }
 
+        static Thread info;
+
+        static void info_szal()
+        {
+            UdpClient c = new UdpClient();
+            c.EnableBroadcast = true;
+
+            IPEndPoint ep = new IPEndPoint(IPAddress.Broadcast, 60001);
+
+            while (true)
+            {
+                using (MemoryStream ms = new MemoryStream())
+                using (BinaryWriter bw = new BinaryWriter(ms))
+                {
+                    UInt16 tmp = (UInt16)((szerverjatekban) ? (1):(0));
+                    bw.Write(tmp);
+                    tmp = (UInt16)Jatekosok.Count;
+                    bw.Write(tmp);
+                    c.Send(ms.ToArray(), (int)ms.Length, ep);
+                }
+
+                Thread.Sleep(500);
+            }
+        }
+
+        static bool szerverjatekban = false;
+
         static void Main(string[] args)
         {
+            info = new Thread(new ThreadStart(info_szal));
+            info.Start();
+
+
             TcpListener tl = new TcpListener(60000);
             tl.Start();
 
@@ -371,6 +402,8 @@ namespace ConsoleApplication3
                     if (Console.ReadKey().KeyChar == 's')
                         break;
             }
+
+            szerverjatekban = true;
 
             jatekos_pozicio_generalas();
 
@@ -532,16 +565,16 @@ namespace ConsoleApplication3
                             bw.Write(palya_magassag);
 
                             byte[] t = new byte[palya_szelesseg * palya_magassag];
-                            
+
                             for (int y = 0, tidx = 0; y < palya_magassag; y++)
                                 for (int x = 0; x < palya_szelesseg; x++)
                                     t[tidx++] = (byte)Palya[x, y].Tipus;
 
                             bw.Write(t);
                             bw.Flush();
-                            
+
                             System.Threading.Thread.Sleep(25);
-                            
+
                             /*sw.
                             sw.Flush();*/
                         }

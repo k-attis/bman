@@ -44,7 +44,7 @@ namespace Kliens
         private void fogadoszal()
         {
             tcpc = new TcpClient();
-            tcpc.Connect("10.0.1.166", 60000);
+            tcpc.Connect("10.2.159.173", 60000);
             //tcpc.Connect("10.7.51.141", 60000);
             //tcpc.Connect("localhost", 60000);
 
