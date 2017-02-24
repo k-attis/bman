@@ -51,7 +51,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 452F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(685, 452);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -90,6 +90,7 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 25;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // jatekter1
             // 
@@ -99,6 +100,8 @@
             this.jatekter1.Size = new System.Drawing.Size(473, 446);
             this.jatekter1.TabIndex = 2;
             this.jatekter1.Text = "jatekter1";
+            this.jatekter1.Click += new System.EventHandler(this.panel1_Click);
+            this.jatekter1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.panel1_PreviewKeyDown);
             // 
             // Form1
             // 

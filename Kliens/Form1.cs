@@ -27,7 +27,7 @@ namespace Kliens
         {
             jatekter1.palya_init(10, 10);
             Thread t = new Thread(new ThreadStart(fogadoszal));
-            //t.Start();
+            t.Start();
         }
 
         private void Log(String Message)
@@ -166,6 +166,11 @@ namespace Kliens
                         break;
                     }
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            jatekter1.Refresh();
         }
     }
 }
