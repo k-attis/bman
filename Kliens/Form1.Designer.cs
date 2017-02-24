@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.jatekter1 = new Kliens.Jatekter();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -44,8 +44,8 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel2, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.jatekter1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -54,21 +54,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(685, 452);
             this.tableLayoutPanel1.TabIndex = 0;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Green;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(473, 446);
-            this.panel1.TabIndex = 0;
-            this.panel1.TabStop = true;
-            this.panel1.Click += new System.EventHandler(this.panel1_Click);
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            this.panel1.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.panel1_PreviewKeyDown);
-            this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
             // 
             // panel2
             // 
@@ -90,7 +75,6 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(200, 426);
             this.listBox1.TabIndex = 1;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // textBox1
             // 
@@ -106,7 +90,15 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 25;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // jatekter1
+            // 
+            this.jatekter1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.jatekter1.Location = new System.Drawing.Point(3, 3);
+            this.jatekter1.Name = "jatekter1";
+            this.jatekter1.Size = new System.Drawing.Size(473, 446);
+            this.jatekter1.TabIndex = 2;
+            this.jatekter1.Text = "jatekter1";
             // 
             // Form1
             // 
@@ -118,8 +110,6 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
-            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.Form1_PreviewKeyDown);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -130,11 +120,11 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Timer timer1;
+        private Jatekter jatekter1;
     }
 }
 
