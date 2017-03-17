@@ -352,7 +352,8 @@ namespace ConsoleApplication3
                 using (MemoryStream ms = new MemoryStream())
                 using (BinaryWriter bw = new BinaryWriter(ms))
                 {
-                    UInt16 tmp = (UInt16)((szerverjatekban) ? (1):(0));
+                    bw.Write(szerverneve);
+                    UInt16 tmp = (UInt16)((szerverjatekban) ? (1) : (0));
                     bw.Write(tmp);
                     tmp = (UInt16)Jatekosok.Count;
                     bw.Write(tmp);
@@ -364,9 +365,12 @@ namespace ConsoleApplication3
         }
 
         static bool szerverjatekban = false;
+        static String szerverneve = "";
 
         static void Main(string[] args)
         {
+            szerverneve = Console.ReadLine();
+
             info = new Thread(new ThreadStart(info_szal));
             info.Start();
 
