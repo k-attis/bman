@@ -70,15 +70,14 @@ namespace Kliens
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            listBox1.Items.Clear();
-                for(int i= listBox1.Items.Count; i < SzerverLista.Count; i++)
+            listBox1.BeginUpdate();
+
+            for (int i = listBox1.Items.Count; i < SzerverLista.Count; i++)
             {
                 listBox1.Items.Add("");
             }
 
-            listBox1.BeginUpdate();
-            
-            for (int i=0;i < SzerverLista.Count;i++)
+            for (int i = 0; i < SzerverLista.Count; i++)
             {
                 listBox1.Items[i] = SzerverLista[i].ToString();
             }
@@ -86,10 +85,10 @@ namespace Kliens
             listBox1.EndUpdate();
 
         }
-    
+
         private void button1_Click(object sender, EventArgs e)
         {
-            if(listBox1.SelectedIndex>=0)
+            if (listBox1.SelectedIndex >= 0)
             {
                 Szerver s = SzerverLista[listBox1.SelectedIndex];
 
@@ -98,9 +97,6 @@ namespace Kliens
                 f.JatekosNev = textBox1.Text;
                 f.Show();
                 Hide();
-
-
-
             }
         }
 
@@ -113,7 +109,7 @@ namespace Kliens
             }
             else
                 button1.Enabled = false;
-          
+
         }
     }
 }

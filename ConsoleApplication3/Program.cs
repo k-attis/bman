@@ -390,8 +390,7 @@ namespace ConsoleApplication3
 
             info = new Thread(new ThreadStart(info_szal));
             info.Start();
-
-
+            
             TcpListener tl = new TcpListener(60000);
             tl.Start();
 
