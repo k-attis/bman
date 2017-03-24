@@ -9,9 +9,9 @@ namespace Bomberman
     {
         public enum Server_Uzi_Tipusok
         {
-            Jatekosok_Pozicioja,
+            Jatekos_Adatok, // 1db játékos neve + képe
+            Jatekosok_Pozicioja, // összes játékos éle + pozició
             Palyakep,
-            Meghaltal,
             Chat
         }
     }

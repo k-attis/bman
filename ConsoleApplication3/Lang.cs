@@ -10,7 +10,7 @@ namespace ConsoleApplication3
     struct Lang
     {
         public uint ID;
-        public Color Szin;
+        //public Color Szin;
         public DateTime Meddig;
         public uint Jatekos_ID;
         public uint x;

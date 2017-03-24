@@ -10,7 +10,7 @@ namespace ConsoleApplication3
     struct Bomba
     {
         public uint ID;
-        public Color Szin;
+        //public Color Szin;
         public uint Rendzs;
         public DateTime Mikor_Robban;
         public uint Jatekos_ID;

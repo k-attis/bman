@@ -147,7 +147,7 @@ namespace ConsoleApplication3
             Bomba b = new Bomba
             {
                 ID = Bomba_ID_Szamlalo++,
-                Szin = j.Szin,
+                //Szin = j.Szin,
                 Rendzs = j.Rendzs,
                 Mikor_Robban = DateTime.Now.AddMilliseconds(3000),
                 Jatekos_ID = j.ID,
@@ -227,7 +227,7 @@ namespace ConsoleApplication3
                         Lang l = new Lang
                         {
                             ID = Lang_ID_Szamlalo++,
-                            Szin = b.Szin,
+                            //Szin = b.Szin,
                             Meddig = DateTime.Now.AddMilliseconds(1000),
                             Jatekos_ID = b.Jatekos_ID,
                             x = lang_x,
@@ -251,7 +251,7 @@ namespace ConsoleApplication3
                         Lang l = new Lang
                         {
                             ID = Lang_ID_Szamlalo++,
-                            Szin = b.Szin,
+                            //Szin = b.Szin,
                             Meddig = DateTime.Now.AddMilliseconds(1000),
                             Jatekos_ID = b.Jatekos_ID,
                             x = lang_x,
@@ -408,11 +408,11 @@ namespace ConsoleApplication3
                         Maxbombaszam = 1,
                         Ele = true,
                         Sebesseg = 1,
-                        Uzisor = new ConcurrentQueue<String>(),
+                        CsomiSor = new ConcurrentQueue<String>(),
                         tcp = tl.AcceptTcpClient(),
                         thread = new Thread(new ParameterizedThreadStart(jatekos_szal))
                     };
-                    j.Uzisor.Enqueue("Üdv a világomban!");
+                    j.CsomiSor.Enqueue("Üdv a világomban!");
                     Jatekosok.Add(j.ID, j);
 
                     j.thread.Start(j);
@@ -482,8 +482,14 @@ namespace ConsoleApplication3
         {
             Console.WriteLine(Uzi);
             foreach (Jatekos j in Jatekosok.Values.ToList())
-                j.Uzisor.Enqueue(Uzi);
+                j.CsomiSor.Enqueue(Uzi);
         }
+
+        /*static void uj_jatekos(Jatekos j)
+        {
+            foreach (Jatekos j in Jatekosok.Values.ToList())
+                j.Uzisor.Enqueue(Uzi);
+        }*/    
 
         static void jatekos_szal(Object param)
         {
@@ -507,10 +513,13 @@ namespace ConsoleApplication3
                                     case Jatekos_Uzi_Tipusok.Bemutatkozik:
                                         Bemutatkozott = true;
                                         j.Nev = br.ReadString();
-                                        int r = br.ReadByte();
-                                        int g = br.ReadByte();
-                                        int b = br.ReadByte();
-                                        j.Szin = System.Drawing.Color.FromArgb(r, g, b);
+                                        UInt32 tmp = br.ReadUInt32();
+                                        j.Arc = br.ReadBytes((int)tmp);
+
+
+
+
+
                                         break;
                                     case Jatekos_Uzi_Tipusok.Lep_Fel:
                                         if (!Bemutatkozott)
@@ -565,7 +574,7 @@ namespace ConsoleApplication3
 
                             String uzi;
 
-                            if (j.Uzisor.TryDequeue(out uzi))
+                            if (j.CsomiSor.TryDequeue(out uzi))
                             {
                                 bw.Write((byte)Server_Uzi_Tipusok.Chat);
                                 bw.Write(uzi);
@@ -577,11 +586,11 @@ namespace ConsoleApplication3
                             foreach (Jatekos jj in Jatekosok.Values.ToList())
                             {
                                 bw.Write(jj.ID);
-                                bw.Write(jj.Nev);
+                                //bw.Write(jj.Nev);
                                 bw.Write(jj.Ele);
-                                bw.Write(jj.Szin.R);
+                                /*bw.Write(jj.Szin.R);
                                 bw.Write(jj.Szin.G);
-                                bw.Write(jj.Szin.B);
+                                bw.Write(jj.Szin.B);*/
                                 bw.Write(jj.x);
                                 bw.Write(jj.y);
                             }

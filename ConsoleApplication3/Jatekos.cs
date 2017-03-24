@@ -14,7 +14,7 @@ namespace ConsoleApplication3
     {
         public uint ID;
         public String Nev;
-        public Color Szin;
+        public byte[] Arc;        
         public uint x;
         public uint y;
         public uint Sebesseg;
@@ -23,7 +23,7 @@ namespace ConsoleApplication3
         public uint Actbombaszam;
         public uint Rendzs;
 
-        public ConcurrentQueue<String> Uzisor;
+        public ConcurrentQueue<Csomi> CsomiSor;
 
         public TcpClient tcp;
         public Thread thread;

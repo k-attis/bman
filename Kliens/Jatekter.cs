@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,15 @@ namespace Kliens
 
             arcom = new Bitmap(@"e:\Attila\face.png");
             arcom.MakeTransparent(Color.FromArgb(255, 0, 255));
+        }
+
+        public byte[] getArcom()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                arcom.Save(ms, ImageFormat.MemoryBmp);
+                return ms.ToArray();
+            }
         }
 
         public CellaTipus[,] Palya;
@@ -253,7 +264,7 @@ namespace Kliens
                 {
                     string ss;
 
-                    if(j.Ele)                        
+                    if (j.Ele)
                         ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F410));//1F410,
                     else
                         ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x271D));
@@ -274,11 +285,11 @@ namespace Kliens
                         CellaY2PixelY(j.y) + soy);
                 }
 
-               bufferg.DrawImage(arcom, 0, 0, cell_size, cell_size);
+                bufferg.DrawImage(arcom, 0, 0, cell_size, cell_size);
             }
             catch { }
 
-            e.Graphics.DrawImage(buffer, 0, 0);            
+            e.Graphics.DrawImage(buffer, 0, 0);
         }
 
         protected override void OnPaintBackground(PaintEventArgs pevent)

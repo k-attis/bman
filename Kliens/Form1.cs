@@ -50,13 +50,11 @@ namespace Kliens
             tcpc.Connect(SzerverIPCime, 60000);
 
             bw = new BinaryWriter(tcpc.GetStream());
-
-
             bw.Write((byte)Jatekos_Uzi_Tipusok.Bemutatkozik);
             bw.Write(JatekosNev);
-            bw.Write((byte)255);
-            bw.Write((byte)0);
-            bw.Write((byte)0);
+            byte[] tmp = jatekter1.getArcom();
+            bw.Write((UInt32)tmp.Length);
+            bw.Write(tmp);
             bw.Flush();
 
             using (BinaryReader br = new BinaryReader(tcpc.GetStream()))

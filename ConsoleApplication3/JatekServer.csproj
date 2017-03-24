@@ -46,13 +46,19 @@
   <ItemGroup>
     <Compile Include="Bomba.cs" />
     <Compile Include="Cella.cs" />
+    <Compile Include="ChatCsomi.cs" />
+    <Compile Include="Csomi.cs" />
     <Compile Include="Jatekos.cs" />
+    <Compile Include="JatekosAdatokCsomi.cs" />
+    <Compile Include="JatekosokPoziciojaCsomi.cs" />
     <Compile Include="Lang.cs" />
+    <Compile Include="PalyakepCsomi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
