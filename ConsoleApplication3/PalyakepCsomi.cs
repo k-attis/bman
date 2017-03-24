@@ -5,11 +5,13 @@ using System.Text;
 
 namespace ConsoleApplication3
 {
-    public class PalyakepCsomi : Csomi
+    sealed class PalyakepCsomi : Csomi
     {
         public override void becsomagol(BinaryWriter bw)
         {
             throw new System.NotImplementedException();
+
+            bw.Flush();
         }
     }
 }

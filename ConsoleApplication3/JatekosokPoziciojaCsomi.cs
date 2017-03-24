@@ -7,7 +7,7 @@ using Bomberman.KozosKod;
 
 namespace ConsoleApplication3
 {
-    class JatekosokPoziciojaCsomi : Csomi
+    sealed class JatekosokPoziciojaCsomi : Csomi
     {
         private List<Jatekos> JatekosLista;
 
@@ -30,6 +30,8 @@ namespace ConsoleApplication3
                 bw.Write(j.x);
                 bw.Write(j.y);
             }
+
+            bw.Flush();
         }
     }
 }

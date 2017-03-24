@@ -13,11 +13,10 @@ namespace ConsoleApplication3
 {
     class Program
     {
-        static Cella[,] Palya;
-        static uint palya_szelesseg;
-        static uint palya_magassag;
         static Random r = new Random();
-        static double kezdeti_palya_telitettseg_faktor = 0.7;
+
+        static Palya palya = new Palya(20, 20, 0.7);
+
         static uint Jatekos_ID_Szamlalo = 1;
         static Dictionary<uint, Jatekos> Jatekosok = new Dictionary<uint, Jatekos>();
         static uint Bomba_ID_Szamlalo = 1;
@@ -25,71 +24,10 @@ namespace ConsoleApplication3
         static uint Lang_ID_Szamlalo = 1;
         static Dictionary<uint, Lang> Langok = new Dictionary<uint, Lang>();
 
-        static void palya_init(uint pszelesseg, uint pmagassag)
-        {
-            palya_szelesseg = pszelesseg;
-            palya_magassag = pmagassag;
-
-            Palya = new Cella[palya_szelesseg, palya_magassag];
-
-            for (uint i = 0; i < palya_szelesseg; i++)
-                for (uint j = 0; j < palya_magassag; j++)
-                    Palya[i, j].Tipus = CellaTipus.Ures;
-
-            for (uint i = 0; i < palya_szelesseg; i++)
-            {
-                Palya[i, 0].Tipus = CellaTipus.Fal;
-                Palya[i, palya_magassag - 1].Tipus = CellaTipus.Fal;
-            }
-
-            for (uint i = 0; i < palya_magassag; i++)
-            {
-                Palya[0, i].Tipus = CellaTipus.Fal;
-                Palya[palya_szelesseg - 1, i].Tipus = CellaTipus.Fal;
-            }
-
-            for (uint i = 2; i < palya_szelesseg; i += 2)
-                for (uint j = 2; j < palya_magassag; j += 2)
-                    Palya[i, j].Tipus = CellaTipus.Fal;
-
-            for (uint y = 0; y < palya_magassag; y++)
-                for (uint x = 0; x < palya_szelesseg; x++)
-                    if (Palya[x, y].Tipus == CellaTipus.Ures)
-                        if (r.NextDouble() < kezdeti_palya_telitettseg_faktor)
-                            Palya[x, y].Tipus = CellaTipus.Robbanthato_Fal;
-        }
-
-        static void palya_kirajzol()
-        {
-            for (uint y = 0; y < palya_magassag; y++)
-            {
-                for (uint x = 0; x < palya_szelesseg; x++)
-                {
-                    Console.SetCursorPosition((int)x, (int)y);
-                    Console.ForegroundColor = ConsoleColor.White;
-                    switch (Palya[x, y].Tipus)
-                    {
-                        case CellaTipus.Ures: Console.ForegroundColor = ConsoleColor.DarkGreen; Console.Write(' '); break;
-                        case CellaTipus.Fal: Console.ForegroundColor = ConsoleColor.Gray; Console.Write('█'); break; //219
-                        case CellaTipus.Robbanthato_Fal: Console.ForegroundColor = ConsoleColor.Cyan; Console.Write('▒'); break; //177
-                        case CellaTipus.Bomba: Console.ForegroundColor = ConsoleColor.Magenta; Console.Write('☼'); break;
-                        case CellaTipus.Lang: Console.ForegroundColor = ConsoleColor.Red; Console.Write('x'); break;
-                        default: Console.Write('?'); break;
-                    }
-                }
-            }
-
-            foreach (Jatekos j in Jatekosok.Values.ToList())
-            {
-                Console.SetCursorPosition((int)j.x, (int)j.y);
-                Console.Write(j.Nev);
-            }
-        }
-
         static void jatekos_pozicio_generalas()
         {
-            uint x_db = (palya_szelesseg - 2 - 1) / 2;
-            uint y_db = (palya_magassag - 2 - 1) / 2;
+            uint x_db = (palya.Szelesseg - 2 - 1) / 2;
+            uint y_db = (palya.Magassag - 2 - 1) / 2;
 
             for (int i = 0; i < Jatekosok.Count; i++)
             {
@@ -115,19 +53,15 @@ namespace ConsoleApplication3
                         Jatekos jj = Jatekosok.Values.ElementAt(i);
                         jj.x = x;
                         jj.y = y;
-                        //Jatekosok[jj.ID] = jj;
-                        Palya[x, y].Tipus = CellaTipus.Ures;
-                        Palya[x + 1, y].Tipus = CellaTipus.Ures;
-                        Palya[x, y + 1].Tipus = CellaTipus.Ures;
+
+                        palya.Cellak[x, y].Tipus = CellaTipus.Ures;
+                        palya.Cellak[x + 1, y].Tipus = CellaTipus.Ures;
+                        palya.Cellak[x, y + 1].Tipus = CellaTipus.Ures;
                         break;
                     }
                 }
 
             }
-
-            /*foreach (Jatekos j in Jatekosok.Values.ToList())
-                Console.WriteLine("ID={0} Nev={1} x={2} y={3}", j.ID, j.Nev, j.x, j.y);
-                */
         }
 
         static void bomba_telepites(uint jatekos_ID, uint bomba_x, uint bomba_y)
@@ -138,10 +72,8 @@ namespace ConsoleApplication3
 
             if (j.Actbombaszam >= j.Maxbombaszam)
                 return;
-            if (bomba_x >= palya_szelesseg || bomba_y >= palya_magassag)
-                return;
 
-            if (Palya[bomba_x, bomba_y].Tipus != CellaTipus.Ures)
+            if (!palya.uresE(bomba_x, bomba_y))
                 return;
 
             Bomba b = new Bomba
@@ -157,8 +89,8 @@ namespace ConsoleApplication3
 
             Bombak.Add(b.ID, b);
 
-            Palya[bomba_x, bomba_y].Tipus = CellaTipus.Bomba;
-            Palya[bomba_x, bomba_y].Bomba_ID = b.ID;
+            palya.bomba_telepit(b);
+
             j.Actbombaszam++;
         }
 
@@ -187,7 +119,8 @@ namespace ConsoleApplication3
                     j.Actbombaszam--;
             }
 
-            Palya[b.x, b.y].Tipus = CellaTipus.Ures;
+            palya.cellaTorol(b.x, b.y);
+
             lang_telepit(b.x, b.y, b);
 
             uint x = b.x;
@@ -213,14 +146,17 @@ namespace ConsoleApplication3
 
         static bool lang_telepit(uint lang_x, uint lang_y, Bomba b)
         {
-            if (lang_x >= palya_szelesseg || lang_y >= palya_magassag)
+            if (lang_x >= palya.Szelesseg || lang_y >= palya.Magassag)
                 return false;
 
             foreach (Jatekos j in Jatekosok.Values)
                 if (j.x == lang_x && j.y == lang_y)
+                {
+                    csomiSzoras(new ChatCsomi(j.ID, "Jajj, meghaltam!"));
                     j.Ele = false;
-            /*TOOD:Meghal üzenet*/
-            switch (Palya[lang_x, lang_y].Tipus)
+                }
+
+            switch (palya.Cellak[lang_x, lang_y].Tipus)
             {
                 case CellaTipus.Ures:
                     {
@@ -236,8 +172,8 @@ namespace ConsoleApplication3
 
                         Langok.Add(l.ID, l);
 
-                        Palya[lang_x, lang_y].Tipus = CellaTipus.Lang;
-                        Palya[lang_x, lang_y].Lang_ID = l.ID;
+                        palya.lang_telepit(l);
+
                         return true;
                     }
                 case CellaTipus.Fal:
@@ -246,7 +182,7 @@ namespace ConsoleApplication3
                     }
                 case CellaTipus.Lang:
                     {
-                        Langok.Remove(Palya[lang_x, lang_y].Lang_ID);
+                        Langok.Remove(palya.Cellak[lang_x, lang_y].Lang_ID);
 
                         Lang l = new Lang
                         {
@@ -260,12 +196,13 @@ namespace ConsoleApplication3
 
                         Langok.Add(l.ID, l);
 
-                        Palya[lang_x, lang_y].Lang_ID = l.ID;
+                        palya.lang_telepit(l);
+
                         return true;
                     }
                 case CellaTipus.Bomba:
                     {
-                        bomba_robban(Palya[lang_x, lang_y].Bomba_ID);
+                        bomba_robban(palya.Cellak[lang_x, lang_y].Bomba_ID);
                         return false;
                     }
                 case CellaTipus.Robbanthato_Fal:
@@ -390,7 +327,7 @@ namespace ConsoleApplication3
 
             info = new Thread(new ThreadStart(info_szal));
             info.Start();
-            
+
             TcpListener tl = new TcpListener(60000);
             tl.Start();
 
@@ -478,18 +415,11 @@ namespace ConsoleApplication3
             return true;
         }
 
-        static void uzi_szoras(String Uzi)
+        static void csomiSzoras(Csomi csomi)
         {
-            Console.WriteLine(Uzi);
             foreach (Jatekos j in Jatekosok.Values.ToList())
-                j.CsomiSor.Enqueue(Uzi);
+                j.CsomiSor.Enqueue(csomi);
         }
-
-        /*static void uj_jatekos(Jatekos j)
-        {
-            foreach (Jatekos j in Jatekosok.Values.ToList())
-                j.Uzisor.Enqueue(Uzi);
-        }*/    
 
         static void jatekos_szal(Object param)
         {
@@ -516,10 +446,7 @@ namespace ConsoleApplication3
                                         UInt32 tmp = br.ReadUInt32();
                                         j.Arc = br.ReadBytes((int)tmp);
 
-
-
-
-
+                                        csomiSzoras(new JatekosAdatokCsomi(j));
                                         break;
                                     case Jatekos_Uzi_Tipusok.Lep_Fel:
                                         if (!Bemutatkozott)
@@ -566,38 +493,21 @@ namespace ConsoleApplication3
                                         break;
                                     case Jatekos_Uzi_Tipusok.Chat:
                                         String uzike = br.ReadString();
-                                        String s = String.Format("{0}({1}):{2}", j.Nev, j.ID, uzike);
-                                        uzi_szoras(s);
+                                        csomiSzoras(new ChatCsomi(j.ID, uzike));
                                         break;
                                 }
                             }
 
-                            String uzi;
+                            j.CsomiSor.Enqueue(new JatekosokPoziciojaCsomi(Jatekosok.Values.ToList()));
 
-                            if (j.CsomiSor.TryDequeue(out uzi))
-                            {
-                                bw.Write((byte)Server_Uzi_Tipusok.Chat);
-                                bw.Write(uzi);
-                                bw.Flush();
-                            }
+                            Csomi tmp;
 
-                            bw.Write((byte)Server_Uzi_Tipusok.Jatekosok_Pozicioja);
+                            while (j.CsomiSor.TryDequeue(out tmp))
+                                tmp.becsomagol(bw);
 
-                            foreach (Jatekos jj in Jatekosok.Values.ToList())
-                            {
-                                bw.Write(jj.ID);
-                                //bw.Write(jj.Nev);
-                                bw.Write(jj.Ele);
-                                /*bw.Write(jj.Szin.R);
-                                bw.Write(jj.Szin.G);
-                                bw.Write(jj.Szin.B);*/
-                                bw.Write(jj.x);
-                                bw.Write(jj.y);
-                            }
 
-                            bw.Write((uint)0);
 
-                            bw.Flush();
+
 
                             bw.Write((byte)Server_Uzi_Tipusok.Palyakep);
 
@@ -614,9 +524,6 @@ namespace ConsoleApplication3
                             bw.Flush();
 
                             System.Threading.Thread.Sleep(25);
-
-                            /*sw.
-                            sw.Flush();*/
                         }
                     }
                 }

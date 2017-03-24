@@ -52,6 +52,7 @@
     <Compile Include="JatekosAdatokCsomi.cs" />
     <Compile Include="JatekosokPoziciojaCsomi.cs" />
     <Compile Include="Lang.cs" />
+    <Compile Include="Palya.cs" />
     <Compile Include="PalyakepCsomi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
