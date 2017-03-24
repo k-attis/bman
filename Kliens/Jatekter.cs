@@ -32,6 +32,14 @@ namespace Kliens
             return offset_y + CellaY * cell_size;
         }
 
+        protected override void OnCreateControl()
+        {
+            base.OnCreateControl();
+
+            arcom = new Bitmap(@"e:\Attila\face.png");
+            arcom.MakeTransparent(Color.FromArgb(255, 0, 255));
+        }
+
         public CellaTipus[,] Palya;
 
         public Dictionary<uint, Jatekos> JatekosLista = new Dictionary<uint, Jatekos>();
@@ -58,6 +66,8 @@ namespace Kliens
                 y = 5
             };
         }*/
+
+        Bitmap arcom;
 
         public void Palyakep(uint Szelesseg, uint Magassag, byte[] Adatok)
         {
@@ -245,7 +255,6 @@ namespace Kliens
 
                     if(j.Ele)                        
                         ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F410));//1F410,
-
                     else
                         ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x271D));
 
@@ -264,10 +273,12 @@ namespace Kliens
                         CellaX2PixelX(j.x) + sox,
                         CellaY2PixelY(j.y) + soy);
                 }
+
+               bufferg.DrawImage(arcom, 0, 0, cell_size, cell_size);
             }
             catch { }
 
-            e.Graphics.DrawImage(buffer, 0, 0);
+            e.Graphics.DrawImage(buffer, 0, 0);            
         }
 
         protected override void OnPaintBackground(PaintEventArgs pevent)
