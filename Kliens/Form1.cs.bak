@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -21,11 +20,12 @@ namespace Kliens
         {
             InitializeComponent();
         }
-
+        
         TcpClient tcpc;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            jatekter1.palya_init(10, 10);
             Thread t = new Thread(new ThreadStart(fogadoszal));
             t.Start();
         }
@@ -38,22 +38,21 @@ namespace Kliens
                 listBox1.SelectedIndex = listBox1.Items.Count - 1;
             }));
         }
-        public IPAddress SzerverIPCime { get; set; }
-        public String JatekosNev { get; set; }
-
 
         BinaryWriter bw;
 
         private void fogadoszal()
         {
             tcpc = new TcpClient();
-            tcpc.Connect(SzerverIPCime, 60000);
+            tcpc.Connect("10.2.159.173", 60000);
+            //tcpc.Connect("10.7.51.141", 60000);
+            //tcpc.Connect("localhost", 60000);
 
             bw = new BinaryWriter(tcpc.GetStream());
 
 
             bw.Write((byte)Jatekos_Uzi_Tipusok.Bemutatkozik);
-            bw.Write(JatekosNev);
+            bw.Write("Attila");
             bw.Write((byte)255);
             bw.Write((byte)0);
             bw.Write((byte)0);
@@ -82,7 +81,6 @@ namespace Kliens
                                         j = new Jatekos();
 
                                     j.Nev = br.ReadString(); // Nev
-                                    j.Ele = br.ReadBoolean();//Ele
 
                                     byte r = br.ReadByte(); // R
                                     byte g = br.ReadByte(); // G
@@ -102,7 +100,7 @@ namespace Kliens
                                 byte[] t = br.ReadBytes((int)(tmp_palya_magassag * tmp_palya_szelesseg));
 
                                 jatekter1.Palyakep(tmp_palya_szelesseg, tmp_palya_magassag, t);
-
+                                
                                 break;
                             case Server_Uzi_Tipusok.Meghaltal:
                                 break;
@@ -127,7 +125,7 @@ namespace Kliens
             }
         }
 
-
+        
         private void panel1_Click(object sender, EventArgs e)
         {
             jatekter1.Focus();

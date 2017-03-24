@@ -71,49 +71,10 @@ namespace Kliens
         private void timer1_Tick(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
-                for(int i= listBox1.Items.Count; i < SzerverLista.Count; i++)
+            foreach(Szerver s in SzerverLista)
             {
-                listBox1.Items.Add("");
+                listBox1.Items.Add(s.ToString());
             }
-
-            listBox1.BeginUpdate();
-            
-            for (int i=0;i < SzerverLista.Count;i++)
-            {
-                listBox1.Items[i] = SzerverLista[i].ToString();
-            }
-
-            listBox1.EndUpdate();
-
-        }
-    
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if(listBox1.SelectedIndex>=0)
-            {
-                Szerver s = SzerverLista[listBox1.SelectedIndex];
-
-                Form1 f = new Form1();
-                f.SzerverIPCime = s.IPCim;
-                f.JatekosNev = textBox1.Text;
-                f.Show();
-                Hide();
-
-
-
-            }
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBox1.SelectedIndex >= 0)
-            {
-                Szerver s = SzerverLista[listBox1.SelectedIndex];
-                button1.Enabled = !s.Jatekbane;
-            }
-            else
-                button1.Enabled = false;
-          
         }
     }
 }

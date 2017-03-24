@@ -36,7 +36,7 @@ namespace Kliens
 
         public Dictionary<uint, Jatekos> JatekosLista = new Dictionary<uint, Jatekos>();
 
-        /*public void palya_init(uint szelesseg, uint magassag)
+        public void palya_init(uint szelesseg, uint magassag)
         {
             palya_szelesseg = szelesseg;
             palya_magassag = magassag;
@@ -57,7 +57,7 @@ namespace Kliens
                 x = 2,
                 y = 5
             };
-        }*/
+        }
 
         public void Palyakep(uint Szelesseg, uint Magassag, byte[] Adatok)
         {
@@ -84,8 +84,8 @@ namespace Kliens
 
             try
             {
-                uint cell_width = ((uint)buffer.Width - 10) / palya_szelesseg;
-                uint cell_height = ((uint)buffer.Height - 10) / palya_magassag;
+                uint cell_width = ((uint)buffer.Width - 150) / palya_szelesseg;
+                uint cell_height = ((uint)buffer.Height - 150) / palya_magassag;
                 cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
 
                 offset_x = ((uint)buffer.Width - cell_size * palya_szelesseg) / 2;
