@@ -51,6 +51,7 @@
     <Compile Include="Jatekos.cs" />
     <Compile Include="JatekosAdatokCsomi.cs" />
     <Compile Include="JatekosokPoziciojaCsomi.cs" />
+    <Compile Include="KartyaGenerator.cs" />
     <Compile Include="Lang.cs" />
     <Compile Include="Palya.cs" />
     <Compile Include="PalyakepCsomi.cs" />

@@ -9,15 +9,8 @@
   </Class>
   <Class Name="ConsoleApplication3.Program" Collapsed="true">
     <Position X="2.25" Y="0.5" Width="1.5" />
-    <NestedTypes>
-      <Struct Name="ConsoleApplication3.Program.KartyaSuly" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Program.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAICAhAABAEAAAoAqAUAAIAACBAgEAAARAABBAoAAAA=</HashCode>
+      <HashCode>AAICAhAABAEAAAoAqAUAAIAAABAgEAAARAABBAoAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -61,6 +54,20 @@
     <TypeIdentifier>
       <HashCode>AAAAIAABAAAAAAIAAAAAABAEAAAAAAIAAAAAAABAAAE=</HashCode>
       <FileName>Palya.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConsoleApplication3.KartyaGenerator">
+    <Position X="6" Y="4.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="ConsoleApplication3.KartyaGenerator.KartyaSuly" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>KartyaGenerator.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>KartyaGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="ConsoleApplication3.Bomba">

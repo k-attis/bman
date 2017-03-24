@@ -207,17 +207,16 @@ namespace ConsoleApplication3
                     }
                 case CellaTipus.Robbanthato_Fal:
                     {
-                        Palya[lang_x, lang_y].Tipus = CellaTipus.Ures;
+                        palya.cellaTorol(lang_x, lang_y);
                         kartya_telepit(lang_x, lang_y, false);
                         return false;
                     }
                 default:
                     {
-                        Palya[lang_x, lang_y].Tipus = CellaTipus.Ures;
+                        palya.cellaTorol(lang_x, lang_y);
                         return false;
                     }
             }
-
         }
 
         static void lang_check()
@@ -226,43 +225,10 @@ namespace ConsoleApplication3
                 if (l.Meddig < DateTime.Now)
                 {
                     Langok.Remove(l.ID);
-                    Palya[l.x, l.y].Tipus = CellaTipus.Ures;
+                    palya.cellaTorol(l.x, l.y);
                 }
         }
 
-        struct KartyaSuly
-        {
-            public CellaTipus KartyaTipus;
-            public double Suly;
-        };
-
-        static List<KartyaSuly> KartyaSulyok = new List<KartyaSuly>
-        {
-            new KartyaSuly() {
-                KartyaTipus = CellaTipus.Bomba_Kartya,
-                Suly = 0.3
-            },
-            new KartyaSuly() {
-                KartyaTipus = CellaTipus.Lang_Kartya,
-                Suly = 0.3
-            },
-                        new KartyaSuly() {
-                KartyaTipus = CellaTipus.Halalfej_Kartya,
-                Suly = 0.1
-            },
-                                    new KartyaSuly() {
-                KartyaTipus = CellaTipus.Sebesseg_Kartya,
-                Suly = 0.1
-            },
-                                                new KartyaSuly() {
-                KartyaTipus = CellaTipus.Lab_Kartya,
-                Suly = 0.1
-            },
-                                                            new KartyaSuly() {
-                KartyaTipus = CellaTipus.Kesztyu_Kartya,
-                Suly = 0.1
-            }
-        };
 
         static void kartya_telepit(uint kartya_x, uint kartya_y, bool force)
         {
