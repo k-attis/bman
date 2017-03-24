@@ -15,6 +15,6 @@ namespace ConsoleApplication3
         public DateTime Mikor_Robban;
         public uint Jatekos_ID;
         public uint x;
-        public uint y;
+        public uint y; 
     }
 }
