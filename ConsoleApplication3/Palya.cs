@@ -68,7 +68,7 @@ namespace ConsoleApplication3
             Cellak[l.x, l.y].Lang_ID = l.ID;
         }
 
-        void kirajzol()
+        public void kirajzol()
         {
             for (uint y = 0; y < Magassag; y++)
             {

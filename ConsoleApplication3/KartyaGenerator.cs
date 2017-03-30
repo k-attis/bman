@@ -42,9 +42,30 @@ namespace ConsoleApplication3
             }
         };
 
-        CellaTipus general()
-        {
+        static Random r = new Random();
 
+        public static CellaTipus general(bool force)
+        {
+            // generáljunk kártyát?
+            if (!force)
+                if (r.NextDouble() > 0.3)
+                    return CellaTipus.Ures;
+
+            double valszeg = r.NextDouble();
+
+            double also_hatar = 0;
+
+            foreach (KartyaSuly ks in KartyaSulyok)
+            {
+                if (valszeg < (also_hatar + ks.Suly))
+                {                    
+                    return ks.KartyaTipus;
+                }
+                else
+                    also_hatar += ks.Suly;
+            }
+
+            return KartyaSulyok.Last().KartyaTipus;
         }
     }
 }

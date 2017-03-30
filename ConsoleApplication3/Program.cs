@@ -17,11 +17,8 @@ namespace ConsoleApplication3
 
         static Palya palya = new Palya(20, 20, 0.7);
 
-        static uint Jatekos_ID_Szamlalo = 1;
         static Dictionary<uint, Jatekos> Jatekosok = new Dictionary<uint, Jatekos>();
-        static uint Bomba_ID_Szamlalo = 1;
         static Dictionary<uint, Bomba> Bombak = new Dictionary<uint, Bomba>();
-        static uint Lang_ID_Szamlalo = 1;
         static Dictionary<uint, Lang> Langok = new Dictionary<uint, Lang>();
 
         static void jatekos_pozicio_generalas()
@@ -76,16 +73,7 @@ namespace ConsoleApplication3
             if (!palya.uresE(bomba_x, bomba_y))
                 return;
 
-            Bomba b = new Bomba
-            {
-                ID = Bomba_ID_Szamlalo++,
-                //Szin = j.Szin,
-                Rendzs = j.Rendzs,
-                Mikor_Robban = DateTime.Now.AddMilliseconds(3000),
-                Jatekos_ID = j.ID,
-                x = bomba_x,
-                y = bomba_y
-            };
+            Bomba b = new Bomba(j, bomba_x, bomba_y);
 
             Bombak.Add(b.ID, b);
 
@@ -160,15 +148,7 @@ namespace ConsoleApplication3
             {
                 case CellaTipus.Ures:
                     {
-                        Lang l = new Lang
-                        {
-                            ID = Lang_ID_Szamlalo++,
-                            //Szin = b.Szin,
-                            Meddig = DateTime.Now.AddMilliseconds(1000),
-                            Jatekos_ID = b.Jatekos_ID,
-                            x = lang_x,
-                            y = lang_y
-                        };
+                        Lang l = new Lang(b.Jatekos_ID, lang_x, lang_y);
 
                         Langok.Add(l.ID, l);
 
@@ -184,15 +164,7 @@ namespace ConsoleApplication3
                     {
                         Langok.Remove(palya.Cellak[lang_x, lang_y].Lang_ID);
 
-                        Lang l = new Lang
-                        {
-                            ID = Lang_ID_Szamlalo++,
-                            //Szin = b.Szin,
-                            Meddig = DateTime.Now.AddMilliseconds(1000),
-                            Jatekos_ID = b.Jatekos_ID,
-                            x = lang_x,
-                            y = lang_y
-                        };
+                        Lang l = new Lang(b.Jatekos_ID, lang_x, lang_y);
 
                         Langok.Add(l.ID, l);
 
@@ -232,30 +204,14 @@ namespace ConsoleApplication3
 
         static void kartya_telepit(uint kartya_x, uint kartya_y, bool force)
         {
-            if (kartya_x >= palya_szelesseg || kartya_y >= palya_magassag)
+            if (kartya_x >= palya.Szelesseg || kartya_y >= palya.Magassag)
                 return;
 
-            if (Palya[kartya_x, kartya_y].Tipus != CellaTipus.Ures)
+            if (palya.Cellak[kartya_x, kartya_y].Tipus != CellaTipus.Ures)
                 return;
 
-            // generáljunk kártyát?
-            if (r.NextDouble() > 0.3 && !force)
-                return;
-
-            double valszeg = r.NextDouble();
-
-            double also_hatar = 0;
-
-            foreach (KartyaSuly ks in KartyaSulyok)
-            {
-                if (valszeg < (also_hatar + ks.Suly))
-                {
-                    Palya[kartya_x, kartya_y].Tipus = ks.KartyaTipus;
-                    return;
-                }
-                else
-                    also_hatar += ks.Suly;
-            }
+            palya.Cellak[kartya_x, kartya_y].Tipus =
+                KartyaGenerator.general(force);
         }
 
         static Thread info;
@@ -297,25 +253,16 @@ namespace ConsoleApplication3
             TcpListener tl = new TcpListener(60000);
             tl.Start();
 
-            palya_init(20, 20);
-
             while (true) // Csatalakozós ciklus
             {
                 if (tl.Pending())
                 {
                     Jatekos j = new Jatekos()
                     {
-                        ID = Jatekos_ID_Szamlalo++,
-                        Nev = "",
-                        Rendzs = 1,
-                        Maxbombaszam = 1,
-                        Ele = true,
-                        Sebesseg = 1,
-                        CsomiSor = new ConcurrentQueue<String>(),
                         tcp = tl.AcceptTcpClient(),
                         thread = new Thread(new ParameterizedThreadStart(jatekos_szal))
                     };
-                    j.CsomiSor.Enqueue("Üdv a világomban!");
+                    j.CsomiSor.Enqueue(new ChatCsomi(0, "Üdv a világomban!"));
                     Jatekosok.Add(j.ID, j);
 
                     j.thread.Start(j);
@@ -334,7 +281,7 @@ namespace ConsoleApplication3
             {
                 bomba_check();
                 lang_check();
-                palya_kirajzol();
+                palya.kirajzol();
                 System.Threading.Thread.Sleep(50);
             }
         }
@@ -346,15 +293,15 @@ namespace ConsoleApplication3
                 ||
                 uj_x < 0
                 ||
-                uj_y >= palya_magassag
+                uj_y >= palya.Magassag
                 ||
-                uj_x >= palya_szelesseg
+                uj_x >= palya.Szelesseg
                 )
                 return false;
 
-            lock (Palya)
+            lock (palya)
             {
-                switch (Palya[uj_x, uj_y].Tipus)
+                switch (palya.Cellak[uj_x, uj_y].Tipus)
                 {
                     case CellaTipus.Ures: break;
                     case CellaTipus.Fal: return false;
@@ -365,11 +312,11 @@ namespace ConsoleApplication3
                         break;
                     case CellaTipus.Bomba_Kartya:
                         j.Maxbombaszam += 1;
-                        Palya[uj_x, uj_y].Tipus = CellaTipus.Ures;
+                        palya.Cellak[uj_x, uj_y].Tipus = CellaTipus.Ures;
                         break;
                     case CellaTipus.Lang_Kartya:
                         j.Rendzs += 1;
-                        Palya[uj_x, uj_y].Tipus = CellaTipus.Ures;
+                        palya.Cellak[uj_x, uj_y].Tipus = CellaTipus.Ures;
                         break;
                     case CellaTipus.Halalfej_Kartya: break;
                     case CellaTipus.Sebesseg_Kartya: break;
@@ -409,8 +356,8 @@ namespace ConsoleApplication3
                                     case Jatekos_Uzi_Tipusok.Bemutatkozik:
                                         Bemutatkozott = true;
                                         j.Nev = br.ReadString();
-                                        UInt32 tmp = br.ReadUInt32();
-                                        j.Arc = br.ReadBytes((int)tmp);
+                                        UInt32 hossz = br.ReadUInt32();
+                                        j.Arc = br.ReadBytes((int)hossz);
 
                                         csomiSzoras(new JatekosAdatokCsomi(j));
                                         break;
@@ -465,30 +412,13 @@ namespace ConsoleApplication3
                             }
 
                             j.CsomiSor.Enqueue(new JatekosokPoziciojaCsomi(Jatekosok.Values.ToList()));
+                            j.CsomiSor.Enqueue(new PalyakepCsomi(palya));
 
                             Csomi tmp;
 
                             while (j.CsomiSor.TryDequeue(out tmp))
                                 tmp.becsomagol(bw);
-
-
-
-
-
-                            bw.Write((byte)Server_Uzi_Tipusok.Palyakep);
-
-                            bw.Write(palya_szelesseg);
-                            bw.Write(palya_magassag);
-
-                            byte[] t = new byte[palya_szelesseg * palya_magassag];
-
-                            for (int y = 0, tidx = 0; y < palya_magassag; y++)
-                                for (int x = 0; x < palya_szelesseg; x++)
-                                    t[tidx++] = (byte)Palya[x, y].Tipus;
-
-                            bw.Write(t);
-                            bw.Flush();
-
+                            
                             System.Threading.Thread.Sleep(25);
                         }
                     }
@@ -496,12 +426,12 @@ namespace ConsoleApplication3
             }
             catch
             {
-                uzi_szoras(String.Format("{0}({1}):{2}", j.Nev, j.ID, "***KILLED***"));
+                csomiSzoras(new ChatCsomi(j.ID, "***TCP CONNECTION KILLED***"));
             }
             finally
             {
                 Jatekosok.Remove(j.ID);
-                uzi_szoras(String.Format("{0}({1}):{2}", j.Nev, j.ID, "***CLOSED***"));
+                csomiSzoras(new ChatCsomi(j.ID, "***CLOSED***"));
             }
         }
     }
