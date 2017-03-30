@@ -15,5 +15,6 @@ namespace Kliens
         public Color Szin;
         public uint x;
         public uint y;
+        public Bitmap Arc;
     }
 }

@@ -66,30 +66,53 @@ namespace Kliens
                         int uzi_tipus = br.ReadByte();
                         switch ((Server_Uzi_Tipusok)uzi_tipus)
                         {
+                            case Server_Uzi_Tipusok.Jatekos_Adatok:
+
+                                UInt32 id = br.ReadUInt32();
+
+                                Jatekos j;
+
+                                if (!jatekter1.JatekosLista.TryGetValue(id, out j))
+                                {
+                                    j = new Jatekos();
+                                    j.ID = id;
+                                    jatekter1.JatekosLista[id] = j;
+                                }
+
+                                j.Nev = br.ReadString();
+
+                                UInt32 archossz = br.ReadUInt32();
+                                byte[] arcbájtok = br.ReadBytes((int)archossz);
+
+                                using (MemoryStream ms = new MemoryStream(arcbájtok))
+                                {
+                                    j.Arc = new Bitmap(ms);
+                                }
+
+                                break;
+
                             case Server_Uzi_Tipusok.Jatekosok_Pozicioja:
 
-                                while (true)
+                                uint dbszam = br.ReadUInt32(); // ID
+                                for (int db = 0; db < dbszam; db++)
                                 {
-                                    uint dbszam = br.ReadUInt32(); // ID
-                                    for (int db = 0; db < dbszam; db++)
+                                    UInt32 xid = br.ReadUInt32();
+
+                                    Jatekos xj;
+
+                                    if (!jatekter1.JatekosLista.TryGetValue(xid, out xj))
                                     {
-                                        UInt32 id = br.ReadUInt32();
-
-                                        Jatekos j;
-
-                                        if (!jatekter1.JatekosLista.TryGetValue(id, out j))
-                                        {
-                                            j = new Jatekos();
-                                            j.ID = id;
-                                        }
-
-                                        j.Ele = br.ReadBoolean();//Ele
-                                        j.x = br.ReadUInt32(); // x
-                                        j.y = br.ReadUInt32(); // y
-
-                                        jatekter1.JatekosLista[id] = j;
+                                        xj = new Jatekos();
+                                        xj.ID = xid;
                                     }
+
+                                    xj.Ele = br.ReadBoolean();//Ele
+                                    xj.x = br.ReadUInt32(); // x
+                                    xj.y = br.ReadUInt32(); // y
+
+                                    jatekter1.JatekosLista[xid] = xj;
                                 }
+
                                 break;
                             case Server_Uzi_Tipusok.Palyakep:
 
@@ -101,8 +124,26 @@ namespace Kliens
 
                                 break;
                             case Server_Uzi_Tipusok.Chat:
+                                UInt32 jid = br.ReadUInt32();
                                 String s = br.ReadString();
-                                Log(s);
+
+                                if (jid == 0)
+                                {
+                                    Log("Rendszer:" + s);
+
+                                }
+                                else
+                                {
+                                    Jatekos cj;
+                                    if (jatekter1.JatekosLista.TryGetValue(jid, out cj))
+                                    {
+                                        Log(cj.Nev + ":" + s);
+                                    }
+                                    else
+                                    {
+                                        Log("Ismeretlen:" + s);
+                                    }
+                                }
                                 break;
                         }
                     }
