@@ -70,27 +70,25 @@ namespace Kliens
 
                                 while (true)
                                 {
-                                    uint id = br.ReadUInt32(); // ID
-                                    if (id == 0)
-                                        break;
+                                    uint dbszam = br.ReadUInt32(); // ID
+                                    for (int db = 0; db < dbszam; db++)
+                                    {
+                                        UInt32 id = br.ReadUInt32();
 
-                                    Jatekos j;
+                                        Jatekos j;
 
-                                    if (!jatekter1.JatekosLista.TryGetValue(id, out j))
-                                        j = new Jatekos();
+                                        if (!jatekter1.JatekosLista.TryGetValue(id, out j))
+                                        {
+                                            j = new Jatekos();
+                                            j.ID = id;
+                                        }
 
-                                    j.Nev = br.ReadString(); // Nev
-                                    j.Ele = br.ReadBoolean();//Ele
+                                        j.Ele = br.ReadBoolean();//Ele
+                                        j.x = br.ReadUInt32(); // x
+                                        j.y = br.ReadUInt32(); // y
 
-                                    byte r = br.ReadByte(); // R
-                                    byte g = br.ReadByte(); // G
-                                    byte b = br.ReadByte();  // B
-
-                                    j.Szin = Color.FromArgb(r, g, b);
-                                    j.x = br.ReadUInt32(); // x
-                                    j.y = br.ReadUInt32(); // y
-
-                                    jatekter1.JatekosLista[id] = j;
+                                        jatekter1.JatekosLista[id] = j;
+                                    }
                                 }
                                 break;
                             case Server_Uzi_Tipusok.Palyakep:
@@ -101,8 +99,6 @@ namespace Kliens
 
                                 jatekter1.Palyakep(tmp_palya_szelesseg, tmp_palya_magassag, t);
 
-                                break;
-                            case Server_Uzi_Tipusok.Meghaltal:
                                 break;
                             case Server_Uzi_Tipusok.Chat:
                                 String s = br.ReadString();

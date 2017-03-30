@@ -23,7 +23,7 @@ namespace ConsoleApplication3
         {
             base.becsomagol(bw);
 
-            bw.Write(JatekosID);
+            bw.Write((UInt32)JatekosID);
             bw.Write(ChatUzi);
 
             bw.Flush();

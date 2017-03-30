@@ -245,8 +245,9 @@ namespace ConsoleApplication3
 
         static void Main(string[] args)
         {
-            szerverneve = Console.ReadLine();
-
+            //szerverneve = Console.ReadLine();
+            szerverneve = "Szerver";
+            Console.WriteLine("szerver elindult {0} néven", szerverneve);
             info = new Thread(new ThreadStart(info_szal));
             info.Start();
 
@@ -418,7 +419,7 @@ namespace ConsoleApplication3
 
                             while (j.CsomiSor.TryDequeue(out tmp))
                                 tmp.becsomagol(bw);
-                            
+
                             System.Threading.Thread.Sleep(25);
                         }
                     }

@@ -37,16 +37,19 @@ namespace Kliens
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-
-            arcom = new Bitmap(@"e:\Attila\face.png");
-            arcom.MakeTransparent(Color.FromArgb(255, 0, 255));
+            try
+            {
+                arcom = new Bitmap(@"c:\zzz\turtle.jpg");
+                arcom.MakeTransparent(Color.FromArgb(255, 255, 255));
+            }
+            catch { }            
         }
 
         public byte[] getArcom()
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                arcom.Save(ms, ImageFormat.MemoryBmp);
+                arcom.Save(ms, ImageFormat.Png);
                 return ms.ToArray();
             }
         }
@@ -103,191 +106,194 @@ namespace Kliens
 
             bufferg.Clear(Color.Green);
 
-            try
+            if (palya_szelesseg > 0 && palya_magassag > 0)
             {
-                uint cell_width = ((uint)buffer.Width - 10) / palya_szelesseg;
-                uint cell_height = ((uint)buffer.Height - 10) / palya_magassag;
-                cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
-
-                offset_x = ((uint)buffer.Width - cell_size * palya_szelesseg) / 2;
-                offset_y = ((uint)buffer.Height - cell_size * palya_magassag) / 2;
-
-                for (uint i = 0; i < palya_magassag; i++)
-                    for (uint j = 0; j < palya_szelesseg; j++)
-                        switch (Palya[j, i])
-                        {
-                            case CellaTipus.Fal:
-                                {
-                                    bufferg.FillRectangle(Brushes.Gray,
-                                        CellaX2PixelX(j),
-                                        CellaY2PixelY(i),
-                                        cell_size,
-                                        cell_size);
-                                    break;
-                                }
-                            case CellaTipus.Robbanthato_Fal:
-                                {
-                                    bufferg.FillRectangle(new HatchBrush(HatchStyle.DiagonalBrick, Color.Gray, Color.Red),
-                                        CellaX2PixelX(j),
-                                        CellaY2PixelY(i),
-                                        cell_size,
-                                        cell_size);
-                                    break;
-                                }
-                            case CellaTipus.Bomba_Kartya:
-                                {
-                                    bufferg.FillRectangle(Brushes.Cyan,
-                                      CellaX2PixelX(j),
-                                      CellaY2PixelY(i),
-                                      cell_size,
-                                      cell_size);
-
-                                    string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F4A3));
-
-                                    Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
-
-                                    SizeF s = bufferg.MeasureString(ss, f);
-                                    int sox = ((int)cell_size - (int)s.Width) / 2;
-                                    int soy = ((int)cell_size - (int)s.Height) / 2;
-
-                                    bufferg.DrawString(ss,
-                                        f,
-                                        Brushes.Black,
-                                       CellaX2PixelX(j) + sox,
-                                       CellaY2PixelY(i) + soy);
-
-                                    break;
-                                }
-                            case CellaTipus.Lang_Kartya:
-                                {
-                                    bufferg.FillRectangle(Brushes.Cyan,
-                                      CellaX2PixelX(j),
-                                      CellaY2PixelY(i),
-                                      cell_size,
-                                      cell_size);
-
-                                    string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1f525));
-
-                                    Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
-
-                                    SizeF s = bufferg.MeasureString(ss, f);
-                                    int sox = ((int)cell_size - (int)s.Width) / 2;
-                                    int soy = ((int)cell_size - (int)s.Height) / 2;
-
-                                    bufferg.DrawString(ss,
-                                        f,
-                                        Brushes.Black,
-                                       CellaX2PixelX(j) + sox,
-                                       CellaY2PixelY(i) + soy);
-
-                                    break;
-                                }
-
-                            case CellaTipus.Lab_Kartya:
-                                {
-                                    bufferg.FillRectangle(Brushes.Cyan,
-                                        CellaX2PixelX(j),
-                                        CellaY2PixelY(i),
-                                        cell_size,
-                                        cell_size);
-
-                                    string ss = Encoding.UTF32.GetString(
-                                        BitConverter.GetBytes(0x1f463)
-                                        );
-
-                                    Font f = new Font("Segoe UI Symbol",
-                                        cell_size * 0.6f,
-                                        FontStyle.Bold);
-
-                                    SizeF s = bufferg.MeasureString(ss, f);
-
-                                    int sox = ((int)cell_size - (int)s.Width) / 2;
-                                    int soy = ((int)cell_size - (int)s.Height) / 2;
-
-                                    bufferg.DrawString(ss,
-                                        f,
-                                        Brushes.Black,
-                                        CellaX2PixelX(j) + sox,
-                                        CellaY2PixelY(i) + soy);
-
-                                    break;
-                                }
-                            case CellaTipus.Bomba:
-                                {
-                                    /* bufferg.FillRectangle(Brushes.Cyan,
-                                         CellaX2PixelX(j,
-                                         CellaY2PixelY(i,
-                                         cell_size,
-                                         cell_size);*/
-
-                                    Font f = new Font("Wingdings", cell_size * 0.6f, FontStyle.Bold);
-
-                                    SizeF s = bufferg.MeasureString("M", f);
-
-                                    int sox = ((int)cell_size - (int)s.Width) / 2;
-                                    int soy = ((int)cell_size - (int)s.Height) / 2;
-
-                                    bufferg.DrawString("M",
-                                        f,
-                                        new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xFF)),
-                                        CellaX2PixelX(j) + sox,
-                                        CellaY2PixelY(i) + soy);
-
-                                    break;
-                                }
-                            case CellaTipus.Lang:
-                                {
-                                    string ss = Encoding.UTF32.GetString(
-                                      BitConverter.GetBytes(0x1F525)
-                                      );
-
-                                    Font f = new Font("Segoe UI Symbol",
-                                        cell_size * 0.6f,
-                                        FontStyle.Bold);
-
-                                    SizeF s = bufferg.MeasureString(ss, f);
-
-                                    int sox = ((int)cell_size - (int)s.Width) / 2;
-                                    int soy = ((int)cell_size - (int)s.Height) / 2;
-
-                                    bufferg.DrawString(ss,
-                                        f,
-                                        Brushes.Red,
-                                        CellaX2PixelX(j) + sox,
-                                        CellaY2PixelY(i) + soy);
-
-                                    break;
-                                }
-                        }
-
-                foreach (Jatekos j in JatekosLista.Values.ToList())
+                try
                 {
-                    string ss;
+                    uint cell_width = ((uint)buffer.Width - 10) / palya_szelesseg;
+                    uint cell_height = ((uint)buffer.Height - 10) / palya_magassag;
+                    cell_size = (cell_width < cell_height) ? (cell_width) : (cell_height);
 
-                    if (j.Ele)
-                        ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F410));//1F410,
-                    else
-                        ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x271D));
+                    offset_x = ((uint)buffer.Width - cell_size * palya_szelesseg) / 2;
+                    offset_y = ((uint)buffer.Height - cell_size * palya_magassag) / 2;
 
-                    Font f = new Font("Segoe UI Symbol",
-                        cell_size * 0.6f,
-                        FontStyle.Bold);
+                    for (uint i = 0; i < palya_magassag; i++)
+                        for (uint j = 0; j < palya_szelesseg; j++)
+                            switch (Palya[j, i])
+                            {
+                                case CellaTipus.Fal:
+                                    {
+                                        bufferg.FillRectangle(Brushes.Gray,
+                                            CellaX2PixelX(j),
+                                            CellaY2PixelY(i),
+                                            cell_size,
+                                            cell_size);
+                                        break;
+                                    }
+                                case CellaTipus.Robbanthato_Fal:
+                                    {
+                                        bufferg.FillRectangle(new HatchBrush(HatchStyle.DiagonalBrick, Color.Gray, Color.Red),
+                                            CellaX2PixelX(j),
+                                            CellaY2PixelY(i),
+                                            cell_size,
+                                            cell_size);
+                                        break;
+                                    }
+                                case CellaTipus.Bomba_Kartya:
+                                    {
+                                        bufferg.FillRectangle(Brushes.Cyan,
+                                          CellaX2PixelX(j),
+                                          CellaY2PixelY(i),
+                                          cell_size,
+                                          cell_size);
 
-                    SizeF s = bufferg.MeasureString(ss, f);
+                                        string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F4A3));
 
-                    int sox = ((int)cell_size - (int)s.Width) / 2;
-                    int soy = ((int)cell_size - (int)s.Height) / 2;
+                                        Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
 
-                    bufferg.DrawString(ss,
-                        f,
-                        new SolidBrush(j.Szin),
-                        CellaX2PixelX(j.x) + sox,
-                        CellaY2PixelY(j.y) + soy);
+                                        SizeF s = bufferg.MeasureString(ss, f);
+                                        int sox = ((int)cell_size - (int)s.Width) / 2;
+                                        int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                                        bufferg.DrawString(ss,
+                                            f,
+                                            Brushes.Black,
+                                           CellaX2PixelX(j) + sox,
+                                           CellaY2PixelY(i) + soy);
+
+                                        break;
+                                    }
+                                case CellaTipus.Lang_Kartya:
+                                    {
+                                        bufferg.FillRectangle(Brushes.Cyan,
+                                          CellaX2PixelX(j),
+                                          CellaY2PixelY(i),
+                                          cell_size,
+                                          cell_size);
+
+                                        string ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1f525));
+
+                                        Font f = new Font("Segoe UI Symbol", cell_size * 0.6f, FontStyle.Bold);
+
+                                        SizeF s = bufferg.MeasureString(ss, f);
+                                        int sox = ((int)cell_size - (int)s.Width) / 2;
+                                        int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                                        bufferg.DrawString(ss,
+                                            f,
+                                            Brushes.Black,
+                                           CellaX2PixelX(j) + sox,
+                                           CellaY2PixelY(i) + soy);
+
+                                        break;
+                                    }
+
+                                case CellaTipus.Lab_Kartya:
+                                    {
+                                        bufferg.FillRectangle(Brushes.Cyan,
+                                            CellaX2PixelX(j),
+                                            CellaY2PixelY(i),
+                                            cell_size,
+                                            cell_size);
+
+                                        string ss = Encoding.UTF32.GetString(
+                                            BitConverter.GetBytes(0x1f463)
+                                            );
+
+                                        Font f = new Font("Segoe UI Symbol",
+                                            cell_size * 0.6f,
+                                            FontStyle.Bold);
+
+                                        SizeF s = bufferg.MeasureString(ss, f);
+
+                                        int sox = ((int)cell_size - (int)s.Width) / 2;
+                                        int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                                        bufferg.DrawString(ss,
+                                            f,
+                                            Brushes.Black,
+                                            CellaX2PixelX(j) + sox,
+                                            CellaY2PixelY(i) + soy);
+
+                                        break;
+                                    }
+                                case CellaTipus.Bomba:
+                                    {
+                                        /* bufferg.FillRectangle(Brushes.Cyan,
+                                             CellaX2PixelX(j,
+                                             CellaY2PixelY(i,
+                                             cell_size,
+                                             cell_size);*/
+
+                                        Font f = new Font("Wingdings", cell_size * 0.6f, FontStyle.Bold);
+
+                                        SizeF s = bufferg.MeasureString("M", f);
+
+                                        int sox = ((int)cell_size - (int)s.Width) / 2;
+                                        int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                                        bufferg.DrawString("M",
+                                            f,
+                                            new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xFF)),
+                                            CellaX2PixelX(j) + sox,
+                                            CellaY2PixelY(i) + soy);
+
+                                        break;
+                                    }
+                                case CellaTipus.Lang:
+                                    {
+                                        string ss = Encoding.UTF32.GetString(
+                                          BitConverter.GetBytes(0x1F525)
+                                          );
+
+                                        Font f = new Font("Segoe UI Symbol",
+                                            cell_size * 0.6f,
+                                            FontStyle.Bold);
+
+                                        SizeF s = bufferg.MeasureString(ss, f);
+
+                                        int sox = ((int)cell_size - (int)s.Width) / 2;
+                                        int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                                        bufferg.DrawString(ss,
+                                            f,
+                                            Brushes.Red,
+                                            CellaX2PixelX(j) + sox,
+                                            CellaY2PixelY(i) + soy);
+
+                                        break;
+                                    }
+                            }
+
+                    foreach (Jatekos j in JatekosLista.Values.ToList())
+                    {
+                        string ss;
+
+                        if (j.Ele)
+                            ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F410));//1F410,
+                        else
+                            ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x271D));
+
+                        Font f = new Font("Segoe UI Symbol",
+                            cell_size * 0.6f,
+                            FontStyle.Bold);
+
+                        SizeF s = bufferg.MeasureString(ss, f);
+
+                        int sox = ((int)cell_size - (int)s.Width) / 2;
+                        int soy = ((int)cell_size - (int)s.Height) / 2;
+
+                        bufferg.DrawString(ss,
+                            f,
+                            new SolidBrush(j.Szin),
+                            CellaX2PixelX(j.x) + sox,
+                            CellaY2PixelY(j.y) + soy);
+                    }
+
+                    bufferg.DrawImage(arcom, 0, 0, cell_size, cell_size);
                 }
-
-                bufferg.DrawImage(arcom, 0, 0, cell_size, cell_size);
+                catch { }
             }
-            catch { }
 
             e.Graphics.DrawImage(buffer, 0, 0);
         }

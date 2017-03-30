@@ -25,10 +25,10 @@ namespace ConsoleApplication3
 
             foreach (Jatekos j in JatekosLista)
             {
-                bw.Write(j.ID);
-                bw.Write(j.Ele);
-                bw.Write(j.x);
-                bw.Write(j.y);
+                bw.Write((UInt32)j.ID);
+                bw.Write((bool)j.Ele);
+                bw.Write((UInt32)j.x);
+                bw.Write((UInt32)j.y);
             }
 
             bw.Flush();

@@ -39,6 +39,8 @@ namespace ConsoleApplication3
                 for (uint j = 2; j < Magassag; j += 2)
                     Cellak[i, j].Tipus = CellaTipus.Fal;
 
+            Random r = new Random();
+
             for (uint y = 0; y < Magassag; y++)
                 for (uint x = 0; x < Szelesseg; x++)
                     if (Cellak[x, y].Tipus == CellaTipus.Ures)

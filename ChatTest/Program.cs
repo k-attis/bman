@@ -67,8 +67,6 @@ namespace ChatTest
                                     byte[] t = br.ReadBytes((int)(palya_magassag * palya_szelesseg));
 
                                     break;
-                                case Server_Uzi_Tipusok.Meghaltal:
-                                    break;
                                 case Server_Uzi_Tipusok.Chat:
                                     String s = br.ReadString();
                                     Console.WriteLine(s);
