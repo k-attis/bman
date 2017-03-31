@@ -35,6 +35,7 @@ namespace ConsoleApplication3
                 Cellak[Szelesseg - 1, i].Tipus = CellaTipus.Fal;
             }
 
+
             for (uint i = 2; i < Szelesseg; i += 2)
                 for (uint j = 2; j < Magassag; j += 2)
                     Cellak[i, j].Tipus = CellaTipus.Fal;
@@ -46,6 +47,11 @@ namespace ConsoleApplication3
                     if (Cellak[x, y].Tipus == CellaTipus.Ures)
                         if (r.NextDouble() < kezdeti_cellak_telitettseg_faktor)
                             Cellak[x, y].Tipus = CellaTipus.Robbanthato_Fal;
+
+            cellaTorol(Szelesseg / 2, 0);
+            cellaTorol(Szelesseg / 2, Magassag - 1);
+            cellaTorol(0, Magassag / 2);
+            cellaTorol(Szelesseg - 1, Magassag / 2);
         }
 
         public bool uresE(uint x, uint y)

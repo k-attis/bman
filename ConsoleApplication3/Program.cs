@@ -15,7 +15,7 @@ namespace ConsoleApplication3
     {
         static Random r = new Random();
 
-        static Palya palya = new Palya(20, 20, 0.7);
+        static Palya palya = new Palya(21, 21, 0.7);
 
         static Dictionary<uint, Jatekos> Jatekosok = new Dictionary<uint, Jatekos>();
         static Dictionary<uint, Bomba> Bombak = new Dictionary<uint, Bomba>();
@@ -339,22 +339,29 @@ namespace ConsoleApplication3
 
             switch (irany)
             {
-                case Jatekos_Uzi_Tipusok.Lep_Jobbra: uj_x++; break;
-                case Jatekos_Uzi_Tipusok.Lep_Le: uj_y++; break;
-                case Jatekos_Uzi_Tipusok.Lep_Balra: uj_x--; break;
-                case Jatekos_Uzi_Tipusok.Lep_Fel: uj_y--; break;
+                case Jatekos_Uzi_Tipusok.Lep_Jobbra:
+                    uj_x++;
+                    if (uj_x >= palya.Szelesseg)
+                        uj_x = 0;
+                    break;
+                case Jatekos_Uzi_Tipusok.Lep_Le:
+                    uj_y++;
+                    if (uj_y >= palya.Magassag)
+                        uj_y = 0;
+                    break;
+                case Jatekos_Uzi_Tipusok.Lep_Balra:
+                    if (uj_x == 0)
+                        uj_x = palya.Szelesseg - 1;
+                    else
+                        uj_x--;
+                    break;
+                case Jatekos_Uzi_Tipusok.Lep_Fel:
+                    if (uj_y == 0)
+                        uj_y = palya.Magassag - 1;
+                    else
+                        uj_y--;
+                    break;
             }
-
-            if (
-                uj_y < 0
-                ||
-                uj_x < 0
-                ||
-                uj_y >= palya.Magassag
-                ||
-                uj_x >= palya.Szelesseg
-                )
-                return;
 
             lock (palya)
             {
