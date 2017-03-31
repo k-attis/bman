@@ -14,7 +14,7 @@ namespace ConsoleApplication3
     {
         public uint ID;
         public String Nev = "";
-        public byte[] Arc;        
+        public byte[] Arc;
         public uint x = 0;
         public uint y = 0;
         public uint Sebesseg = 1;
@@ -32,6 +32,18 @@ namespace ConsoleApplication3
         public Jatekos()
         {
             ID = Jatekos_ID_Szamlalo++;
+        }
+
+        public void kezdoAllapot()
+        {
+            x = 0;
+            y = 0;
+            Sebesseg = 1;
+            Ele = true;
+            Maxbombaszam = 1;
+            Actbombaszam = 0;
+            Rendzs = 1;
+            Lab = 0;
         }
 
         static uint Jatekos_ID_Szamlalo = 1;

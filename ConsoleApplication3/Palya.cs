@@ -59,10 +59,13 @@ namespace ConsoleApplication3
 
                 for (int y = 0; y < Magassag; y++)
                     for (int x = 0; x < Szelesseg; x++)
-                        if (palyakep.GetPixel(x, y) == Color.Black)
+                    {
+                        Color c = palyakep.GetPixel(x, y);
+                        if (c.R == 0 && c.G == 0 && c.B == 0)
                             Cellak[x, y].Tipus = CellaTipus.Fal;
                         else
                             Cellak[x, y].Tipus = CellaTipus.Ures;
+                    }
             }
             catch { }
         }
@@ -76,6 +79,14 @@ namespace ConsoleApplication3
                     if (Cellak[x, y].Tipus == CellaTipus.Ures)
                         if (r.NextDouble() < kezdeti_cellak_telitettseg_faktor)
                             Cellak[x, y].Tipus = CellaTipus.Robbanthato_Fal;
+        }
+
+        public void cellakTorol()
+        {
+            for (uint y = 0; y < Magassag; y++)
+                for (uint x = 0; x < Szelesseg; x++)
+                    if (Cellak[x, y].Tipus != CellaTipus.Fal)
+                        Cellak[x, y].Tipus = CellaTipus.Ures;
         }
 
         public bool uresE(uint x, uint y)

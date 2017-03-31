@@ -384,6 +384,25 @@ namespace ConsoleApplication3
                 bomba_check();
                 lang_check();
                 palya.kirajzol();
+
+                int tmp = 0;
+                foreach (Jatekos j in Jatekosok.Values.ToList())
+                    if (j.Ele)
+                        tmp++;
+
+                if (tmp <2)
+                {
+                    palya.cellakTorol();
+                    palya.robbanthatoFalGeneralas(0.7);                    
+                    Bombak.Clear();
+                    Langok.Clear();
+
+                    foreach (Jatekos j in Jatekosok.Values.ToList())
+                        j.kezdoAllapot();
+
+                    jatekos_pozicio_generalas();
+                }                
+
                 System.Threading.Thread.Sleep(50);
             }
         }
@@ -580,6 +599,7 @@ namespace ConsoleApplication3
                                         j.Arc = br.ReadBytes((int)hossz);
 
                                         csomiSzoras(new JatekosAdatokCsomi(j));
+                                        csomiSzoras(new ChatCsomi(j.ID, "***BELÉPETT**"));
                                         break;
                                     case Jatekos_Uzi_Tipusok.Lep_Fel:
                                     case Jatekos_Uzi_Tipusok.Lep_Jobbra:
