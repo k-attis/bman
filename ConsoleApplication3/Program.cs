@@ -23,8 +23,25 @@ namespace ConsoleApplication3
 
         static void jatekos_pozicio_generalas()
         {
-            for (int i = 0; i < Jatekosok.Count; i++)
+            foreach (Jatekos j in Jatekosok.Values.ToList())
             {
+                uint x = (uint)r.Next((int)palya.Szelesseg);
+                uint y = (uint)r.Next((int)palya.Magassag);
+
+                if (palya.jatekosnakJoE(x,y)
+                    &&
+                    palya.jatekosnakJoE(x+1,y)
+                    &&
+                    palya.jatekosnakJoE(x,y+1)
+                    )
+                {
+                    palya.cellaTorol(x, y);
+                    palya.cellaTorol(x+1, y);
+                    palya.cellaTorol(x, y+1);
+                    j.x = x;
+                    j.y = y;
+                }
+
 
 
             }

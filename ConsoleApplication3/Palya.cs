@@ -88,6 +88,20 @@ namespace ConsoleApplication3
                 Cellak[x, y].Tipus == CellaTipus.Ures;
         }
 
+        public bool jatekosnakJoE(uint x, uint y)
+        {
+            return
+                x < Szelesseg
+                &&
+                y < Magassag
+                &&
+                (
+                    Cellak[x, y].Tipus == CellaTipus.Ures
+                    ||
+                    Cellak[x, y].Tipus == CellaTipus.Robbanthato_Fal
+                );
+        }
+
         public void bombaTelepit(Bomba b)
         {
             Cellak[b.x, b.y].Tipus = CellaTipus.Bomba;
