@@ -25,69 +25,138 @@ namespace ConsoleApplication3
         {
             foreach (Jatekos j in Jatekosok.Values.ToList())
             {
-                uint x = (uint)r.Next((int)palya.Szelesseg);
-                uint y = (uint)r.Next((int)palya.Magassag);
-
-                if (palya.jatekosnakJoE(x,y)
-                    &&
-                    palya.jatekosnakJoE(x+1,y)
-                    &&
-                    palya.jatekosnakJoE(x,y+1)
-                    )
+                bool oke = false;
+                while (!oke)
                 {
-                    palya.cellaTorol(x, y);
-                    palya.cellaTorol(x+1, y);
-                    palya.cellaTorol(x, y+1);
-                    j.x = x;
-                    j.y = y;
+                    oke = true;
+
+                    uint x = (uint)r.Next((int)palya.Szelesseg);
+                    uint y = (uint)r.Next((int)palya.Magassag);
+
+                    if (palya.jatekosnakJoE(x, y)
+                        &&
+                        palya.jatekosnakJoE(x + 1, y)
+                        &&
+                        palya.jatekosnakJoE(x, y + 1)
+                        )
+                    {
+                        palya.cellaTorol(x, y);
+                        palya.cellaTorol(x + 1, y);
+                        palya.cellaTorol(x, y + 1);
+                        j.x = x;
+                        j.y = y;
+                    }
+                    else
+                        if (palya.jatekosnakJoE(x, y)
+                        &&
+                        palya.jatekosnakJoE(x - 1, y)
+                        &&
+                        palya.jatekosnakJoE(x, y + 1)
+                        )
+                    {
+                        palya.cellaTorol(x, y);
+                        palya.cellaTorol(x - 1, y);
+                        palya.cellaTorol(x, y + 1);
+                        j.x = x;
+                        j.y = y;
+                    }
+                    else
+                         if (palya.jatekosnakJoE(x, y)
+                        &&
+                        palya.jatekosnakJoE(x - 1, y)
+                        &&
+                        palya.jatekosnakJoE(x, y - 1)
+                        )
+                    {
+                        palya.cellaTorol(x, y);
+                        palya.cellaTorol(x - 1, y);
+                        palya.cellaTorol(x, y - 1);
+                        j.x = x;
+                        j.y = y;
+                    }
+                    else
+                         if (palya.jatekosnakJoE(x, y)
+                        &&
+                        palya.jatekosnakJoE(x + 1, y)
+                        &&
+                        palya.jatekosnakJoE(x, y - 1)
+                        )
+                    {
+                        palya.cellaTorol(x, y);
+                        palya.cellaTorol(x + 1, y);
+                        palya.cellaTorol(x, y - 1);
+                        j.x = x;
+                        j.y = y;
+                    }
+                    else
+                         if (palya.jatekosnakJoE(x, y)
+                        &&
+                        palya.jatekosnakJoE(x, y - 1)
+                        &&
+                        palya.jatekosnakJoE(x, y + 1)
+                        )
+                    {
+                        palya.cellaTorol(x, y);
+                        palya.cellaTorol(x, y - 1);
+                        palya.cellaTorol(x, y + 1);
+                        j.x = x;
+                        j.y = y;
+                    }
+                    else
+                         if (palya.jatekosnakJoE(x - 1, y)
+                        &&
+                        palya.jatekosnakJoE(x, y)
+                        &&
+                        palya.jatekosnakJoE(x + 1, y)
+                        )
+                    {
+                        palya.cellaTorol(x - 1, y);
+                        palya.cellaTorol(x, y);
+                        palya.cellaTorol(x + 1, y);
+                        j.x = x;
+                        j.y = y;
+                    }
+                    else
+                        oke = false;
                 }
-
-
-
             }
 
+            /* uint x_db = (palya.Szelesseg - 2 - 1) / 2;
+             uint y_db = (palya.Magassag - 2 - 1) / 2;
 
-
-
-
-
-
-                /* uint x_db = (palya.Szelesseg - 2 - 1) / 2;
-                 uint y_db = (palya.Magassag - 2 - 1) / 2;
-
-                 for (int i = 0; i < Jatekosok.Count; i++)
+             for (int i = 0; i < Jatekosok.Count; i++)
+             {
+                 while (true)
                  {
-                     while (true)
+                     uint x = (uint)(1 + r.Next((int)x_db) * 2);
+                     uint y = (uint)(1 + r.Next((int)y_db) * 2);
+
+                     bool talaltunke = false;
+
+                     for (int j = 0; j < i; j++)
                      {
-                         uint x = (uint)(1 + r.Next((int)x_db) * 2);
-                         uint y = (uint)(1 + r.Next((int)y_db) * 2);
-
-                         bool talaltunke = false;
-
-                         for (int j = 0; j < i; j++)
+                         Jatekos jj = Jatekosok.Values.ElementAt(j);
+                         if (jj.x == x && jj.y == y)
                          {
-                             Jatekos jj = Jatekosok.Values.ElementAt(j);
-                             if (jj.x == x && jj.y == y)
-                             {
-                                 talaltunke = true;
-                                 break;
-                             }
-                         }
-
-                         if (!talaltunke)
-                         {
-                             Jatekos jj = Jatekosok.Values.ElementAt(i);
-                             jj.x = x;
-                             jj.y = y;
-
-                             palya.Cellak[x, y].Tipus = CellaTipus.Ures;
-                             palya.Cellak[x + 1, y].Tipus = CellaTipus.Ures;
-                             palya.Cellak[x, y + 1].Tipus = CellaTipus.Ures;
+                             talaltunke = true;
                              break;
                          }
                      }
-                 }*/
-            }
+
+                     if (!talaltunke)
+                     {
+                         Jatekos jj = Jatekosok.Values.ElementAt(i);
+                         jj.x = x;
+                         jj.y = y;
+
+                         palya.Cellak[x, y].Tipus = CellaTipus.Ures;
+                         palya.Cellak[x + 1, y].Tipus = CellaTipus.Ures;
+                         palya.Cellak[x, y + 1].Tipus = CellaTipus.Ures;
+                         break;
+                     }
+                 }
+             }*/
+        }
 
         static void bomba_telepites(uint jatekos_ID, uint bomba_x, uint bomba_y)
         {
@@ -272,7 +341,7 @@ namespace ConsoleApplication3
         {
             palya.betolt("palya1.png");
             palya.robbanthatoFalGeneralas(0.7);
-            
+
             //szerverneve = Console.ReadLine();
             szerverneve = "Szerver";
             Console.WriteLine("szerver elindult {0} néven", szerverneve);
@@ -323,7 +392,7 @@ namespace ConsoleApplication3
         {
             uint uj_x = b.x;
             uint uj_y = b.y;
-            
+
             switch (irany)
             {
                 case Jatekos_Uzi_Tipusok.Lep_Jobbra: uj_x++; break;
