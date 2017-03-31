@@ -22,6 +22,7 @@ namespace ConsoleApplication3
         public uint Maxbombaszam = 1;
         public uint Actbombaszam = 0;
         public uint Rendzs = 1;
+        public uint Lab = 0;
 
         public ConcurrentQueue<Csomi> CsomiSor = new ConcurrentQueue<Csomi>();
 

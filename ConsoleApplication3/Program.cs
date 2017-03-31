@@ -288,8 +288,19 @@ namespace ConsoleApplication3
             }
         }
 
-        static bool jatekos_lep(uint uj_x, uint uj_y, Jatekos j)
+        static bool bombaMozgat(Bomba b, Jatekos_Uzi_Tipusok irany)
         {
+            uint uj_x = b.x;
+            uint uj_y = b.y;
+
+            switch (irany)
+            {
+                case Jatekos_Uzi_Tipusok.Lep_Jobbra: uj_x++; break;
+                case Jatekos_Uzi_Tipusok.Lep_Le: uj_y++; break;
+                case Jatekos_Uzi_Tipusok.Lep_Balra: uj_x--; break;
+                case Jatekos_Uzi_Tipusok.Lep_Fel: uj_y--; break;
+            }
+
             if (
                 uj_y < 0
                 ||
@@ -301,14 +312,64 @@ namespace ConsoleApplication3
                 )
                 return false;
 
+            switch (palya.Cellak[uj_x, uj_y].Tipus)
+            {
+                case CellaTipus.Fal:
+                case CellaTipus.Robbanthato_Fal:
+                case CellaTipus.Bomba: return false;
+                case CellaTipus.Lang:
+                    b.x = uj_x;
+                    b.y = uj_y;
+                    bomba_robban(b.ID);
+                    return true;
+                default:
+                    b.x = uj_x;
+                    b.y = uj_y;
+                    return true;
+            }           
+        }
+
+        static void jatekos_lep(Jatekos j, Jatekos_Uzi_Tipusok irany)
+        {
+            uint uj_x = j.x;
+            uint uj_y = j.y;
+
+            switch (irany)
+            {
+                case Jatekos_Uzi_Tipusok.Lep_Jobbra: uj_x++; break;
+                case Jatekos_Uzi_Tipusok.Lep_Le: uj_y++; break;
+                case Jatekos_Uzi_Tipusok.Lep_Balra: uj_x--; break;
+                case Jatekos_Uzi_Tipusok.Lep_Fel: uj_y--; break;
+            }
+
+            if (
+                uj_y < 0
+                ||
+                uj_x < 0
+                ||
+                uj_y >= palya.Magassag
+                ||
+                uj_x >= palya.Szelesseg
+                )
+                return;
+
             lock (palya)
             {
                 switch (palya.Cellak[uj_x, uj_y].Tipus)
                 {
                     case CellaTipus.Ures: break;
-                    case CellaTipus.Fal: return false;
-                    case CellaTipus.Robbanthato_Fal: return false;
-                    case CellaTipus.Bomba: return false;
+                    case CellaTipus.Fal: return;
+                    case CellaTipus.Robbanthato_Fal: return;
+                    case CellaTipus.Bomba:
+                        if (j.Lab == 0)
+                            return;
+
+                        if (!bombaMozgat(irany))
+                            return;
+
+
+
+                        break;
                     case CellaTipus.Lang:
                         UInt32 langid = palya.Cellak[uj_x, uj_y].Lang_ID;
 
@@ -330,12 +391,16 @@ namespace ConsoleApplication3
                         break;
                     case CellaTipus.Halalfej_Kartya: break;
                     case CellaTipus.Sebesseg_Kartya: break;
-                    case CellaTipus.Lab_Kartya: break;
+                    case CellaTipus.Lab_Kartya:
+                        j.Lab += 1;
+                        palya.cellaTorol(uj_x, uj_y);
+                        break;
                     case CellaTipus.Kesztyu_Kartya: break;
                 }
             }
 
-            return true;
+            j.x = uj_x;
+            j.y = uj_y;
         }
 
         static void csomiSzoras(Csomi csomi)
@@ -352,7 +417,7 @@ namespace ConsoleApplication3
             Jatekos j;
             String tettesNev;
 
-            if (!Jatekosok.TryGetValue(tettesJatekosID, out j))            
+            if (!Jatekosok.TryGetValue(tettesJatekosID, out j))
                 tettesNev = "Ismeretlen";
             else
                 tettesNev = j.Nev;
@@ -398,40 +463,14 @@ namespace ConsoleApplication3
                                         csomiSzoras(new JatekosAdatokCsomi(j));
                                         break;
                                     case Jatekos_Uzi_Tipusok.Lep_Fel:
-                                        if (!Bemutatkozott)
-                                            break;
-
-                                        if (!j.Ele)
-                                            break;
-                                        if (jatekos_lep(j.x, j.y - 1, j))
-                                            j.y -= 1;
-                                        break;
                                     case Jatekos_Uzi_Tipusok.Lep_Jobbra:
-                                        if (!Bemutatkozott)
-                                            break;
-                                        if (!j.Ele)
-                                            break;
-
-                                        if (jatekos_lep(j.x + 1, j.y, j))
-                                            j.x += 1;
-                                        break;
                                     case Jatekos_Uzi_Tipusok.Lep_Le:
-                                        if (!Bemutatkozott)
-                                            break;
-
-                                        if (!j.Ele)
-                                            break;
-
-                                        if (jatekos_lep(j.x, j.y + 1, j))
-                                            j.y += 1;
-                                        break;
                                     case Jatekos_Uzi_Tipusok.Lep_Balra:
                                         if (!Bemutatkozott)
                                             break;
                                         if (!j.Ele)
                                             break;
-                                        if (jatekos_lep(j.x - 1, j.y, j))
-                                            j.x -= 1;
+                                        jatekos_lep(j, (Jatekos_Uzi_Tipusok)uzi_tipus);
                                         break;
                                     case Jatekos_Uzi_Tipusok.Bombat_rak:
                                         if (!Bemutatkozott)
