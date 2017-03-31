@@ -15,7 +15,7 @@ namespace ConsoleApplication3
     {
         static Random r = new Random();
 
-        static Palya palya = new Palya(21, 21, 0.7);
+        static Palya palya = new Palya();
 
         static Dictionary<uint, Jatekos> Jatekosok = new Dictionary<uint, Jatekos>();
         static Dictionary<uint, Bomba> Bombak = new Dictionary<uint, Bomba>();
@@ -23,43 +23,54 @@ namespace ConsoleApplication3
 
         static void jatekos_pozicio_generalas()
         {
-            uint x_db = (palya.Szelesseg - 2 - 1) / 2;
-            uint y_db = (palya.Magassag - 2 - 1) / 2;
-
             for (int i = 0; i < Jatekosok.Count; i++)
             {
-                while (true)
-                {
-                    uint x = (uint)(1 + r.Next((int)x_db) * 2);
-                    uint y = (uint)(1 + r.Next((int)y_db) * 2);
 
-                    bool talaltunke = false;
-
-                    for (int j = 0; j < i; j++)
-                    {
-                        Jatekos jj = Jatekosok.Values.ElementAt(j);
-                        if (jj.x == x && jj.y == y)
-                        {
-                            talaltunke = true;
-                            break;
-                        }
-                    }
-
-                    if (!talaltunke)
-                    {
-                        Jatekos jj = Jatekosok.Values.ElementAt(i);
-                        jj.x = x;
-                        jj.y = y;
-
-                        palya.Cellak[x, y].Tipus = CellaTipus.Ures;
-                        palya.Cellak[x + 1, y].Tipus = CellaTipus.Ures;
-                        palya.Cellak[x, y + 1].Tipus = CellaTipus.Ures;
-                        break;
-                    }
-                }
 
             }
-        }
+
+
+
+
+
+
+
+                /* uint x_db = (palya.Szelesseg - 2 - 1) / 2;
+                 uint y_db = (palya.Magassag - 2 - 1) / 2;
+
+                 for (int i = 0; i < Jatekosok.Count; i++)
+                 {
+                     while (true)
+                     {
+                         uint x = (uint)(1 + r.Next((int)x_db) * 2);
+                         uint y = (uint)(1 + r.Next((int)y_db) * 2);
+
+                         bool talaltunke = false;
+
+                         for (int j = 0; j < i; j++)
+                         {
+                             Jatekos jj = Jatekosok.Values.ElementAt(j);
+                             if (jj.x == x && jj.y == y)
+                             {
+                                 talaltunke = true;
+                                 break;
+                             }
+                         }
+
+                         if (!talaltunke)
+                         {
+                             Jatekos jj = Jatekosok.Values.ElementAt(i);
+                             jj.x = x;
+                             jj.y = y;
+
+                             palya.Cellak[x, y].Tipus = CellaTipus.Ures;
+                             palya.Cellak[x + 1, y].Tipus = CellaTipus.Ures;
+                             palya.Cellak[x, y + 1].Tipus = CellaTipus.Ures;
+                             break;
+                         }
+                     }
+                 }*/
+            }
 
         static void bomba_telepites(uint jatekos_ID, uint bomba_x, uint bomba_y)
         {
@@ -242,6 +253,9 @@ namespace ConsoleApplication3
 
         static void Main(string[] args)
         {
+            palya.betolt("palya1.png");
+            palya.robbanthatoFalGeneralas(0.7);
+            
             //szerverneve = Console.ReadLine();
             szerverneve = "Szerver";
             Console.WriteLine("szerver elindult {0} néven", szerverneve);

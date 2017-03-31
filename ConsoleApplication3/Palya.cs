@@ -1,6 +1,7 @@
 ﻿using Bomberman.KozosKod;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -8,11 +9,11 @@ namespace ConsoleApplication3
 {
     class Palya
     {
-        public readonly uint Szelesseg;
-        public readonly uint Magassag;
+        public uint Szelesseg { get; private set; } = 0;
+        public uint Magassag { get; private set; } = 0;
         public Cella[,] Cellak;
 
-        public Palya(uint Szelesseg, uint Magassag, double kezdeti_cellak_telitettseg_faktor)
+        /*public Palya(uint Szelesseg, uint Magassag, )
         {
             this.Szelesseg = Szelesseg;
             this.Magassag = Magassag;
@@ -39,7 +40,35 @@ namespace ConsoleApplication3
             for (uint i = 2; i < Szelesseg; i += 2)
                 for (uint j = 2; j < Magassag; j += 2)
                     Cellak[i, j].Tipus = CellaTipus.Fal;
+                    
 
+            cellaTorol(Szelesseg / 2, 0);
+            cellaTorol(Szelesseg / 2, Magassag - 1);
+            cellaTorol(0, Magassag / 2);
+            cellaTorol(Szelesseg - 1, Magassag / 2);
+        }*/
+
+        public void betolt(String palyaFajlNev)
+        {
+            try
+            {
+                Bitmap palyakep = new Bitmap(palyaFajlNev);
+                Cellak = new Cella[palyakep.Width, palyakep.Height];
+                Szelesseg = (uint)palyakep.Width;
+                Magassag = (uint)palyakep.Height;
+
+                for (int y = 0; y < Magassag; y++)
+                    for (int x = 0; x < Szelesseg; x++)
+                        if (palyakep.GetPixel(x, y) == Color.Black)
+                            Cellak[x, y].Tipus = CellaTipus.Fal;
+                        else
+                            Cellak[x, y].Tipus = CellaTipus.Ures;
+            }
+            catch { }
+        }
+
+        public void robbanthatoFalGeneralas(double kezdeti_cellak_telitettseg_faktor)
+        {
             Random r = new Random();
 
             for (uint y = 0; y < Magassag; y++)
@@ -47,11 +76,6 @@ namespace ConsoleApplication3
                     if (Cellak[x, y].Tipus == CellaTipus.Ures)
                         if (r.NextDouble() < kezdeti_cellak_telitettseg_faktor)
                             Cellak[x, y].Tipus = CellaTipus.Robbanthato_Fal;
-
-            cellaTorol(Szelesseg / 2, 0);
-            cellaTorol(Szelesseg / 2, Magassag - 1);
-            cellaTorol(0, Magassag / 2);
-            cellaTorol(Szelesseg - 1, Magassag / 2);
         }
 
         public bool uresE(uint x, uint y)
