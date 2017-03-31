@@ -58,13 +58,13 @@ namespace ConsoleApplication3
                 Cellak[x, y].Tipus == CellaTipus.Ures;
         }
 
-        public void bomba_telepit(Bomba b)
+        public void bombaTelepit(Bomba b)
         {
             Cellak[b.x, b.y].Tipus = CellaTipus.Bomba;
             Cellak[b.x, b.y].Bomba_ID = b.ID;
         }
 
-        public void lang_telepit(Lang l)
+        public void langTelepit(Lang l)
         {
             Cellak[l.x, l.y].Tipus = CellaTipus.Lang;
             Cellak[l.x, l.y].Lang_ID = l.ID;
@@ -100,6 +100,8 @@ namespace ConsoleApplication3
         public void cellaTorol(uint x, uint y)
         {
             Cellak[x, y].Tipus = CellaTipus.Ures;
+            Cellak[x, y].Bomba_ID = 0;
+            Cellak[x, y].Lang_ID = 0;
         }
     }
 }

@@ -77,7 +77,7 @@ namespace ConsoleApplication3
 
             Bombak.Add(b.ID, b);
 
-            palya.bomba_telepit(b);
+            palya.bombaTelepit(b);
 
             j.Actbombaszam++;
         }
@@ -149,7 +149,7 @@ namespace ConsoleApplication3
 
                         Langok.Add(l.ID, l);
 
-                        palya.lang_telepit(l);
+                        palya.langTelepit(l);
 
                         return true;
                     }
@@ -165,7 +165,7 @@ namespace ConsoleApplication3
 
                         Langok.Add(l.ID, l);
 
-                        palya.lang_telepit(l);
+                        palya.langTelepit(l);
 
                         return true;
                     }
@@ -292,7 +292,7 @@ namespace ConsoleApplication3
         {
             uint uj_x = b.x;
             uint uj_y = b.y;
-
+            
             switch (irany)
             {
                 case Jatekos_Uzi_Tipusok.Lep_Jobbra: uj_x++; break;
@@ -314,18 +314,21 @@ namespace ConsoleApplication3
 
             switch (palya.Cellak[uj_x, uj_y].Tipus)
             {
-                case CellaTipus.Fal:
-                case CellaTipus.Robbanthato_Fal:
-                case CellaTipus.Bomba: return false;
                 case CellaTipus.Lang:
+                    palya.cellaTorol(b.x, b.y);
                     b.x = uj_x;
                     b.y = uj_y;
+                    palya.bombaTelepit(b);
                     bomba_robban(b.ID);
                     return true;
-                default:
+                case CellaTipus.Ures:
+                    palya.cellaTorol(b.x, b.y);
                     b.x = uj_x;
                     b.y = uj_y;
+                    palya.bombaTelepit(b);
                     return true;
+                default:
+                    return false;
             }
         }
 
