@@ -130,7 +130,6 @@ namespace Kliens
                                 if (jid == 0)
                                 {
                                     Log("Rendszer:" + s);
-
                                 }
                                 else
                                 {

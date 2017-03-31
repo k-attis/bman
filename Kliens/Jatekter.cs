@@ -267,6 +267,16 @@ namespace Kliens
 
                     foreach (Jatekos j in JatekosLista.Values.ToList())
                     {
+                        if (j.Arc != null)
+                        {
+                            bufferg.DrawImage(
+                                j.Arc,
+                                CellaX2PixelX(j.x),
+                                CellaY2PixelY(j.y),
+                                cell_size,
+                                cell_size);
+                        }
+
                         string ss;
 
                         if (j.Ele)
@@ -288,9 +298,7 @@ namespace Kliens
                             new SolidBrush(j.Szin),
                             CellaX2PixelX(j.x) + sox,
                             CellaY2PixelY(j.y) + soy);
-                    }
-
-                    bufferg.DrawImage(arcom, 0, 0, cell_size, cell_size);
+                    }                    
                 }
                 catch { }
             }

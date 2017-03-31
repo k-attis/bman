@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Kliens
 {
-    struct Jatekos
+    class Jatekos
     {
         public uint ID;
         public String Nev;

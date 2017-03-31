@@ -139,10 +139,7 @@ namespace ConsoleApplication3
 
             foreach (Jatekos j in Jatekosok.Values)
                 if (j.x == lang_x && j.y == lang_y)
-                {
-                    csomiSzoras(new ChatCsomi(j.ID, "Jajj, meghaltam!"));
-                    j.Ele = false;
-                }
+                    jatekosMeghal(j, b.Jatekos_ID);
 
             switch (palya.Cellak[lang_x, lang_y].Tipus)
             {
@@ -264,6 +261,10 @@ namespace ConsoleApplication3
                         thread = new Thread(new ParameterizedThreadStart(jatekos_szal))
                     };
                     j.CsomiSor.Enqueue(new ChatCsomi(0, "Üdv a világomban!"));
+
+                    foreach (Jatekos tmpj in Jatekosok.Values.ToList())
+                        j.CsomiSor.Enqueue(new JatekosAdatokCsomi(tmpj));
+
                     Jatekosok.Add(j.ID, j);
 
                     j.thread.Start(j);
@@ -309,7 +310,15 @@ namespace ConsoleApplication3
                     case CellaTipus.Robbanthato_Fal: return false;
                     case CellaTipus.Bomba: return false;
                     case CellaTipus.Lang:
-                        j.Ele = false;
+                        UInt32 langid = palya.Cellak[uj_x, uj_y].Lang_ID;
+
+                        Lang l;
+
+                        if (Langok.TryGetValue(langid, out l))
+                            jatekosMeghal(j, l.Jatekos_ID);
+                        else
+                            jatekosMeghal(j, 0);
+
                         break;
                     case CellaTipus.Bomba_Kartya:
                         j.Maxbombaszam += 1;
@@ -333,6 +342,29 @@ namespace ConsoleApplication3
         {
             foreach (Jatekos j in Jatekosok.Values.ToList())
                 j.CsomiSor.Enqueue(csomi);
+        }
+
+        static void jatekosMeghal(Jatekos aldozat, UInt32 tettesJatekosID)
+        {
+            Jatekos j;
+            String tettesNev;
+
+            if (!Jatekosok.TryGetValue(tettesJatekosID, out j))            
+                tettesNev = "Ismeretlen";
+            else
+                tettesNev = j.Nev;
+
+            aldozat.Ele = false;
+
+            csomiSzoras(
+                new ChatCsomi(
+                    aldozat.ID,
+                    String.Format(
+                        "Jajj meghaltam, Tettes:{0}",
+                        tettesNev
+                        )
+                )
+            );
         }
 
         static void jatekos_szal(Object param)
