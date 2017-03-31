@@ -42,7 +42,7 @@ namespace Kliens
                 arcom = new Bitmap(@"c:\zzz\turtle.jpg");
                 arcom.MakeTransparent(Color.FromArgb(255, 255, 255));
             }
-            catch { }            
+            catch { }
         }
 
         public byte[] getArcom()
@@ -225,7 +225,19 @@ namespace Kliens
                                              cell_size,
                                              cell_size);*/
 
-                                        Font f = new Font("Wingdings", cell_size * 0.6f, FontStyle.Bold);
+                                        int idoalap = 500;
+                                        double ingadozik = 0.4;
+                                        double alap = 0.6;
+
+                                        Font f = new Font("Wingdings",
+                                            cell_size * 
+                                            (float)(
+                                            Math.Sin(
+                                                2.0 * Math.PI * (DateTime.Now.Millisecond % idoalap)
+                                                / (double)idoalap
+                                            ) 
+                                            * (ingadozik / 2.0) + alap),
+                                            FontStyle.Bold);
 
                                         SizeF s = bufferg.MeasureString("M", f);
 
@@ -280,25 +292,27 @@ namespace Kliens
                         string ss;
 
                         if (j.Ele)
-                            ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F410));//1F410,
-                        else
+                        {
+                            //ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x1F410));//1F410,
+
                             ss = Encoding.UTF32.GetString(BitConverter.GetBytes(0x271D));
 
-                        Font f = new Font("Segoe UI Symbol",
-                            cell_size * 0.6f,
-                            FontStyle.Bold);
+                            Font f = new Font("Segoe UI Symbol",
+                                cell_size * 0.6f,
+                                FontStyle.Bold);
 
-                        SizeF s = bufferg.MeasureString(ss, f);
+                            SizeF s = bufferg.MeasureString(ss, f);
 
-                        int sox = ((int)cell_size - (int)s.Width) / 2;
-                        int soy = ((int)cell_size - (int)s.Height) / 2;
+                            int sox = ((int)cell_size - (int)s.Width) / 2;
+                            int soy = ((int)cell_size - (int)s.Height) / 2;
 
-                        bufferg.DrawString(ss,
-                            f,
-                            new SolidBrush(j.Szin),
-                            CellaX2PixelX(j.x) + sox,
-                            CellaY2PixelY(j.y) + soy);
-                    }                    
+                            bufferg.DrawString(ss,
+                                f,
+                                Brushes.Black,
+                                CellaX2PixelX(j.x) + sox,
+                                CellaY2PixelY(j.y) + soy);
+                        }
+                    }
                 }
                 catch { }
             }

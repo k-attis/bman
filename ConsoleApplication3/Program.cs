@@ -346,6 +346,9 @@ namespace ConsoleApplication3
 
         static void jatekosMeghal(Jatekos aldozat, UInt32 tettesJatekosID)
         {
+            if (!aldozat.Ele)
+                return;
+
             Jatekos j;
             String tettesNev;
 
