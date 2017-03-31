@@ -326,7 +326,7 @@ namespace ConsoleApplication3
                     b.x = uj_x;
                     b.y = uj_y;
                     return true;
-            }           
+            }
         }
 
         static void jatekos_lep(Jatekos j, Jatekos_Uzi_Tipusok irany)
@@ -364,11 +364,20 @@ namespace ConsoleApplication3
                         if (j.Lab == 0)
                             return;
 
-                        if (!bombaMozgat(irany))
+                        Bomba b;
+
+                        if (!Bombak.TryGetValue(palya.Cellak[uj_x, uj_y].Bomba_ID, out b))
                             return;
 
+                        if (!bombaMozgat(b, irany))
+                            return;
 
+                        j.x = uj_x;
+                        j.y = uj_y;
 
+                        for (int i = (int)j.Lab - 1; i > 0; i--)
+                            if (!bombaMozgat(b, irany))
+                                return;
                         break;
                     case CellaTipus.Lang:
                         UInt32 langid = palya.Cellak[uj_x, uj_y].Lang_ID;
