@@ -25,6 +25,8 @@ namespace ConsoleApplication3
         {
             foreach (Jatekos j in Jatekosok.Values.ToList())
             {
+                j.kezdoAllapot();
+
                 bool oke = false;
                 while (!oke)
                 {
@@ -119,79 +121,35 @@ namespace ConsoleApplication3
                     else
                         oke = false;
                 }
-            }
-
-            /* uint x_db = (palya.Szelesseg - 2 - 1) / 2;
-             uint y_db = (palya.Magassag - 2 - 1) / 2;
-
-             for (int i = 0; i < Jatekosok.Count; i++)
-             {
-                 while (true)
-                 {
-                     uint x = (uint)(1 + r.Next((int)x_db) * 2);
-                     uint y = (uint)(1 + r.Next((int)y_db) * 2);
-
-                     bool talaltunke = false;
-
-                     for (int j = 0; j < i; j++)
-                     {
-                         Jatekos jj = Jatekosok.Values.ElementAt(j);
-                         if (jj.x == x && jj.y == y)
-                         {
-                             talaltunke = true;
-                             break;
-                         }
-                     }
-
-                     if (!talaltunke)
-                     {
-                         Jatekos jj = Jatekosok.Values.ElementAt(i);
-                         jj.x = x;
-                         jj.y = y;
-
-                         palya.Cellak[x, y].Tipus = CellaTipus.Ures;
-                         palya.Cellak[x + 1, y].Tipus = CellaTipus.Ures;
-                         palya.Cellak[x, y + 1].Tipus = CellaTipus.Ures;
-                         break;
-                     }
-                 }
-             }*/
+            }            
         }
 
-        static void bomba_telepites(uint jatekos_ID, uint bomba_x, uint bomba_y)
+        static void bomba_telepites(Jatekos jatekos)
         {
-            Jatekos j;
-            if (!Jatekosok.TryGetValue(jatekos_ID, out j))
+            if (jatekos.Actbombaszam >= jatekos.Maxbombaszam)
                 return;
 
-            if (j.Actbombaszam >= j.Maxbombaszam)
+            if (!palya.uresE(jatekos.x, jatekos.y))
                 return;
 
-            if (!palya.uresE(bomba_x, bomba_y))
-                return;
-
-            Bomba b = new Bomba(j, bomba_x, bomba_y);
+            Bomba b = new Bomba(jatekos, jatekos.x, jatekos.y);
 
             Bombak.Add(b.ID, b);
 
             palya.bombaTelepit(b);
 
-            j.Actbombaszam++;
+            jatekos.Actbombaszam++;
         }
 
         static void bomba_check()
         {
             foreach (Bomba b in Bombak.Values.ToList())
                 if (b.Mikor_Robban <= DateTime.Now)
-                    bomba_robban(b.ID);
+                    bomba_robban(b);
         }
 
-        static void bomba_robban(uint bomba_id)
+        static void bomba_robban(Bomba b)
         {
-            Bomba b;
-            if (!Bombak.TryGetValue(bomba_id, out b))
-                return;
-
             Bombak.Remove(b.ID);
 
             Jatekos j;
@@ -199,7 +157,6 @@ namespace ConsoleApplication3
             {
                 if (j.Actbombaszam <= 0)
                     j.Actbombaszam = 0;
-
                 else
                     j.Actbombaszam--;
             }
@@ -268,7 +225,11 @@ namespace ConsoleApplication3
                     }
                 case CellaTipus.Bomba:
                     {
-                        bomba_robban(palya.Cellak[lang_x, lang_y].Bomba_ID);
+                        Bomba tmpb;
+                        if (!Bombak.TryGetValue(palya.Cellak[lang_x, lang_y].Bomba_ID, out tmpb))
+                            return false;
+
+                        bomba_robban(tmpb);
                         return false;
                     }
                 case CellaTipus.Robbanthato_Fal:
@@ -301,7 +262,7 @@ namespace ConsoleApplication3
             if (kartya_x >= palya.Szelesseg || kartya_y >= palya.Magassag)
                 return;
 
-            if (palya.Cellak[kartya_x, kartya_y].Tipus != CellaTipus.Ures)
+            if (!palya.uresE(kartya_x, kartya_y))
                 return;
 
             palya.Cellak[kartya_x, kartya_y].Tipus =
@@ -390,10 +351,10 @@ namespace ConsoleApplication3
                     if (j.Ele)
                         tmp++;
 
-                if (tmp <2)
+                if (tmp < 2)
                 {
                     palya.cellakTorol();
-                    palya.robbanthatoFalGeneralas(0.7);                    
+                    palya.robbanthatoFalGeneralas(0.7);
                     Bombak.Clear();
                     Langok.Clear();
 
@@ -401,7 +362,7 @@ namespace ConsoleApplication3
                         j.kezdoAllapot();
 
                     jatekos_pozicio_generalas();
-                }                
+                }
 
                 System.Threading.Thread.Sleep(50);
             }
@@ -438,7 +399,7 @@ namespace ConsoleApplication3
                     b.x = uj_x;
                     b.y = uj_y;
                     palya.bombaTelepit(b);
-                    bomba_robban(b.ID);
+                    bomba_robban(b);
                     return true;
                 case CellaTipus.Ures:
                     palya.cellaTorol(b.x, b.y);
@@ -521,11 +482,11 @@ namespace ConsoleApplication3
                         break;
                     case CellaTipus.Bomba_Kartya:
                         j.Maxbombaszam += 1;
-                        palya.Cellak[uj_x, uj_y].Tipus = CellaTipus.Ures;
+                        palya.cellaTorol(uj_x, uj_y);
                         break;
                     case CellaTipus.Lang_Kartya:
                         j.Rendzs += 1;
-                        palya.Cellak[uj_x, uj_y].Tipus = CellaTipus.Ures;
+                        palya.cellaTorol(uj_x, uj_y);
                         break;
                     case CellaTipus.Halalfej_Kartya: break;
                     case CellaTipus.Sebesseg_Kartya: break;
@@ -616,7 +577,7 @@ namespace ConsoleApplication3
                                             break;
                                         if (!j.Ele)
                                             break;
-                                        bomba_telepites(j.ID, j.x, j.y);
+                                        bomba_telepites(j);
                                         break;
                                     case Jatekos_Uzi_Tipusok.Chat:
                                         String uzike = br.ReadString();
@@ -647,6 +608,8 @@ namespace ConsoleApplication3
                 Jatekosok.Remove(j.ID);
                 csomiSzoras(new ChatCsomi(j.ID, "***CLOSED***"));
             }
+
+            Jatekosok.Remove(j.ID);
         }
     }
 }
